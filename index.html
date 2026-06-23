@@ -592,6 +592,11 @@ a.nolink{text-decoration:none;text-align:center}
 .banner svg{width:20px;height:20px;color:var(--red);flex:0 0 auto}
 .banner.gold{background:rgba(200,168,75,.08);border-color:rgba(200,168,75,.3);border-left-color:var(--gold)}
 .banner.gold svg{color:var(--gold)}
+.banner-cta{margin-left:auto;flex:0 0 auto;white-space:nowrap;background:var(--gold);color:#0a0a0a;border:0;font-weight:800;font-size:12px;
+  padding:8px 14px;border-radius:8px;cursor:pointer;transition:.18s}
+.banner-cta:hover{filter:brightness(1.08);transform:translateY(-1px)}
+@media(max-width:560px){.banner.tailor{flex-wrap:wrap}.banner.tailor .banner-cta{margin-left:0;width:100%;margin-top:8px}}
+.banner.gold svg{color:var(--gold)}
 
 .row{display:flex;align-items:center;gap:12px}
 .between{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -1209,6 +1214,15 @@ function saveDashTarget(){
 /* ============================================================
    DASHBOARD
    ============================================================ */
+function profileNeedsSetup(){
+  const p=S.profile||{};
+  const noName=!p.name||p.name==='Fighter';
+  const noWeight=!p.weight;
+  const noEvent=!p.nextEvent;
+  const noDisc=!(p.disciplines&&p.disciplines.length);
+  // Show the "tailor me" nudge until they've filled the core fight-camp inputs.
+  return noName||noWeight||noEvent||noDisc;
+}
 ROUTES.dashboard=function(){
   const p=S.profile;
   const du=daysUntil(p.nextEvent);
@@ -1228,6 +1242,11 @@ ROUTES.dashboard=function(){
   return`
   <div class="view-head"><div class="crumb">Fighter HQ</div><h1>Welcome back, ${esc(p.name.split(' ')[0]||'Fighter')}</h1>
     <p>Your camp at a glance. Everything you need before you step on the mat today.</p></div>
+
+  ${profileNeedsSetup()?`<div class="banner gold tailor">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3l1.9 5.8H20l-4.9 3.6 1.9 5.8L12 14.6 7 18.2l1.9-5.8L4 8.8h6.1L12 3z"/></svg>
+    <div><b>Want a version tailored to you?</b> Go fill your fighter info in Settings — it personalises your weight cut, fight briefings, training targets and partner &amp; coach matches.</div>
+    <button class="banner-cta" onclick="settingsTab='profile';go('settings')">Fill fighter info →</button></div>`:''}
 
   ${activeInj.length?`<div class="banner"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
     <div><b>${activeInj.length} active injur${activeInj.length>1?'ies':'y'}</b> — ${activeInj.map(i=>esc(i.bodyPart)).join(', ')}. Train around them.</div></div>`:''}
@@ -5297,20 +5316,25 @@ let _obStep=1;
 const _ob={name:'',weightClass:'lightweight',experience:'amateur',disciplines:['MMA'],
   style:'All-Rounder',stance:'orthodox',daysToFight:'',weight:'',targetWeight:'',homeGym:'',coach:''};
 function startOnboarding(){
-  _obStep=1;
   const p=S.profile;
-  _ob.name=p.name&&p.name!=='Fighter'?p.name:'';
-  _ob.weightClass=p.weightClass||'lightweight';
-  _ob.experience=p.experience||'amateur';
-  _ob.disciplines=(p.disciplines&&p.disciplines.length)?p.disciplines.slice():['MMA'];
-  _ob.style=p.style||'All-Rounder';
-  _ob.stance=p.stance||'orthodox';
-  _ob.daysToFight=p.nextEvent?String(Math.max(0,daysUntil(p.nextEvent))):'';
-  _ob.weight=p.weight?String(toDisplayW(p.weight)):'';
-  _ob.targetWeight=S.targetWeight?String(toDisplayW(S.targetWeight)):'';
-  _ob.homeGym=p.homeGym||'';
-  _ob.coach=p.coach||'';
-  renderOnboarding();
+  const nm=p.name&&p.name!=='Fighter'?p.name:'';
+  openModal(`<div class="ob">
+    <div class="ob-top"><div class="ob-mark">⬢</div><div><div class="fw7 fz18">Welcome to OCTAGON</div><div class="fz12 muted">Your complete fight-camp HQ</div></div></div>
+    <div class="ob-screen">
+      <p class="fz13" style="line-height:1.55;color:var(--txt)">Jump straight in — no long setup. Just tell us what to call you and you're in.</p>
+      <p class="fz12 muted" style="line-height:1.5">Want everything tailored to you — weight cut, briefings, partner & coach matches? Fill in your full fighter profile any time in <b class="gold">Settings → Fighter Profile</b>.</p>
+      <label class="lbl mt">What should we call you? <span class="muted">(optional)</span></label>
+      <input id="obName" class="field" placeholder="Your name or fight name" value="${esc(nm)}" autofocus onkeydown="if(event.key==='Enter')welcomeEnter()">
+      <button class="btn block mt" onclick="welcomeEnter()">Enter OCTAGON</button>
+    </div>
+  </div>`,false,false);
+}
+function welcomeEnter(){
+  const el=$('#obName');
+  if(el&&el.value&&el.value.trim())S.profile.name=el.value.trim();
+  S.onboarded=true;save();closeModal();refreshTopbar();
+  logActivity('settings','Joined OCTAGON');
+  toast('Welcome to OCTAGON','green');go('dashboard');
 }
 const OB_TITLES={1:'Who are you?',2:'Your game',3:'Fight & weight',4:'Camp & corner'};
 function renderOnboarding(){
