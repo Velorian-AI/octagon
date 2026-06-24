@@ -76,7 +76,7 @@ a{color:var(--gold);text-decoration:none}
 #topbar{
   height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;
   justify-content:space-between;padding:0 24px;position:sticky;top:0;background:rgba(10,10,10,.85);
-  backdrop-filter:blur(12px);z-index:40;gap:16px;overflow:hidden;
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);z-index:40;gap:16px;overflow:hidden;
 }
 /* radar scanline sweeping down the topbar */
 #topbar::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;pointer-events:none;
@@ -246,7 +246,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   background:radial-gradient(120% 80% at 50% 0%,color-mix(in srgb,var(--pc) 28%,#0a0a0a),#0a0a0a 70%);border:1px solid var(--line)}
 .reel-thumb:hover{border-color:var(--pc);box-shadow:0 0 22px color-mix(in srgb,var(--pc) 35%,transparent)}
 .reel-play{position:absolute;inset:0;margin:auto;width:46px;height:46px;display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.5);border:1px solid var(--pc);border-radius:50%;color:#fff;backdrop-filter:blur(2px)}
+  background:rgba(0,0,0,.5);border:1px solid var(--pc);border-radius:50%;color:#fff;-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
 .reel-play svg{width:20px;height:20px;margin-left:2px}
 .reel-tag{position:absolute;left:8px;bottom:8px;font-size:10px;color:#eee;background:rgba(0,0,0,.55);padding:2px 8px;border-radius:999px}
 .reel-player{width:min(92vw,520px)}
@@ -276,10 +276,11 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .tdemo .f-hip{fill:#1c2027;stroke:color-mix(in srgb,var(--pc) 45%,#3c424c);stroke-width:1.4}
 .tdemo .f-skull{fill:#272c35;stroke:color-mix(in srgb,var(--pc) 55%,#454b56);stroke-width:1.6}
 .tdemo .f-face{stroke:color-mix(in srgb,var(--pc) 75%,#9aa);stroke-width:1.5;fill:none;stroke-linecap:round}
-.tdemo .f-arm path,.tdemo .f-leg path{stroke:#d2d6dc;stroke-width:6.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
-.tdemo .f-arm .f-up,.tdemo .f-leg .f-up{stroke:#a7adb6}
+.tdemo .f-limb{stroke:#d6dade;stroke-width:6.4;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.tdemo .f-shin{stroke:#c2c7cf}
 .tdemo .f-glove{fill:var(--pc);stroke:rgba(0,0,0,.35);stroke-width:1.2;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--pc) 60%,transparent))}
 .tdemo .f-foot{fill:#1b1f26;stroke:color-mix(in srgb,var(--pc) 55%,#4a505a);stroke-width:1.4}
+.tdemo .f-foot-c{fill:var(--pc);stroke:rgba(0,0,0,.35);stroke-width:1.2;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--pc) 55%,transparent))}
 /* opponent */
 .tdemo .oppo{opacity:.3}
 .tdemo .oppo .o-body{fill:#16191e;stroke:#3a3f48;stroke-width:1.5}
@@ -290,8 +291,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .tdemo .t-target-dot{fill:var(--pc);opacity:.5}
 .tdemo .t-impact line{stroke:var(--pc);stroke-width:2.6;stroke-linecap:round}
 .tdemo .t-impact circle{fill:none;stroke:var(--pc);stroke-width:2.2}
-.tdemo .t-impact{opacity:0;transform-box:view-box;transform-origin:122px 60px}
-.tdemo .t-trail{fill:none;stroke:var(--pc);stroke-width:2.4;stroke-linecap:round;opacity:0;stroke-dasharray:60;stroke-dashoffset:60}
+.tdemo .t-impact{pointer-events:none}
 /* engagement scene (shot / sprawl) — opponent more present, defending arms */
 .tdemo.t-engage .oppo{opacity:.58}
 .tdemo .o-arm2{fill:none;stroke:#3a3f48;stroke-width:5;stroke-linecap:round}
@@ -302,74 +302,11 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .tdemo .gb-grip{fill:var(--pc);stroke:rgba(0,0,0,.35);stroke-width:1.2;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--pc) 60%,transparent))}
 .tdemo .o-head{fill:#16191e;stroke:#3a3f48;stroke-width:1.5}
 .tdemo .o-arm{fill:none;stroke:#3a3f48;stroke-width:5;stroke-linecap:round}
-.tdemo .gtop{opacity:.7;transform-box:view-box;transform-origin:119px 106px}
-.tdemo .gb-pull{transform-box:view-box;transform-origin:60px 118px}
-/* transform pivots (view-box coords) */
-.tdemo .f-arm-l{transform-box:view-box;transform-origin:67px 60px}
-.tdemo .f-arm-r{transform-box:view-box;transform-origin:73px 60px}
-.tdemo .f-leg-l{transform-box:view-box;transform-origin:66px 93px}
-.tdemo .f-leg-r{transform-box:view-box;transform-origin:74px 93px}
-.tdemo .fbody{transform-box:view-box;transform-origin:70px 134px}
-.tdemo .f-head{transform-box:view-box;transform-origin:70px 52px}
-@keyframes t-target-pulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.16);opacity:.72}}
-@keyframes t-idle{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-1.6px) rotate(-1deg)}}
-@keyframes t-impact{0%,50%{opacity:0;transform:scale(.3)}60%{opacity:1;transform:scale(1)}82%,100%{opacity:0;transform:scale(1.55)}}
-@keyframes t-trailsweep{0%,52%{opacity:0;stroke-dashoffset:60}60%{opacity:.85;stroke-dashoffset:18}80%{opacity:0;stroke-dashoffset:0}100%{opacity:0}}
-@media (prefers-reduced-motion:no-preference){
-  .tdemo .t-target{animation:t-target-pulse 1.6s ease-in-out infinite}
-  .tdemo .f-head{animation:t-idle 2.6s ease-in-out infinite}
-  /* impact flash for striking techniques */
-  .t-jab .t-impact,.t-cross .t-impact,.t-hook .t-impact,.t-uppercut .t-impact,.t-overhand .t-impact,.t-teep .t-impact,.t-lowkick .t-impact{animation:t-impact 1.5s ease-out infinite}
-  .t-jab .t-trail,.t-cross .t-trail,.t-hook .t-trail,.t-lowkick .t-trail{animation:t-trailsweep 1.5s ease-out infinite}
-  /* JAB — lead hand, snap straight */
-  @keyframes t-jab{0%,60%,100%{transform:rotate(0) translate(0,0)}26%{transform:rotate(6deg) translate(35px,13px)}}
-  .t-jab .f-arm-r{animation:t-jab 1.5s cubic-bezier(.2,.9,.25,1) infinite}
-  /* CROSS — rear hand + hip turn */
-  @keyframes t-cross{0%,62%,100%{transform:rotate(0) translate(0,0)}30%{transform:rotate(12deg) translate(42px,16px)}}
-  @keyframes t-crossbody{0%,62%,100%{transform:rotate(0)}30%{transform:rotate(-9deg)}}
-  .t-cross .f-arm-l{animation:t-cross 1.5s cubic-bezier(.2,.9,.25,1) infinite}
-  .t-cross .fbody{animation:t-crossbody 1.5s cubic-bezier(.2,.9,.25,1) infinite}
-  /* HOOK — lead hand horizontal arc */
-  @keyframes t-hook{0%,100%{transform:rotate(0) translate(0,0)}44%{transform:rotate(-58deg) translate(26px,8px)}}
-  @keyframes t-hookbody{0%,100%{transform:rotate(0)}44%{transform:rotate(-7deg)}}
-  .t-hook .f-arm-r{animation:t-hook 1.5s ease-in-out infinite}
-  .t-hook .fbody{animation:t-hookbody 1.5s ease-in-out infinite}
-  /* UPPERCUT — rear hand up the middle */
-  @keyframes t-uppercut{0%,100%{transform:rotate(0) translate(0,0)}40%{transform:rotate(-46deg) translate(30px,2px)}}
-  .t-uppercut .f-arm-l{animation:t-uppercut 1.5s ease-in-out infinite}
-  /* OVERHAND — looping rear hand over the top */
-  @keyframes t-overhand{0%,100%{transform:rotate(0) translate(0,0)}38%{transform:rotate(58deg) translate(34px,18px)}}
-  .t-overhand .f-arm-l{animation:t-overhand 1.55s ease-in-out infinite}
-  /* TEEP — push kick straight out */
-  @keyframes t-teep{0%,58%,100%{transform:rotate(0) translate(0,0)}28%{transform:rotate(-74deg) translate(6px,4px)}}
-  @keyframes t-teepbody{0%,58%,100%{transform:rotate(0) translateX(0)}28%{transform:rotate(4deg) translateX(-5px)}}
-  .t-teep .f-leg-r{animation:t-teep 1.6s cubic-bezier(.3,.85,.3,1) infinite}
-  .t-teep .fbody{animation:t-teepbody 1.6s cubic-bezier(.3,.85,.3,1) infinite}
-  /* LOW/ROUND KICK — rear leg whips through */
-  @keyframes t-kick{0%,58%,100%{transform:rotate(0) translate(0,0)}30%{transform:rotate(86deg) translate(2px,-6px)}}
-  @keyframes t-kickbody{0%,58%,100%{transform:rotate(0)}30%{transform:rotate(-12deg)}}
-  .t-lowkick .f-leg-l{animation:t-kick 1.6s cubic-bezier(.3,.85,.3,1) infinite}
-  .t-lowkick .fbody{animation:t-kickbody 1.6s cubic-bezier(.3,.85,.3,1) infinite}
-  /* SLIP — head & torso roll off centre */
-  @keyframes t-slip{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-12px) rotate(-7deg)}75%{transform:translateX(11px) rotate(7deg)}}
-  .t-slip .fbody{animation:t-slip 2s ease-in-out infinite}
-  /* SHOT — level change & drive in */
-  @keyframes t-shot{0%,100%{transform:translate(0,0) scaleY(1)}30%{transform:translateY(12px) scaleY(.9)}64%{transform:translate(26px,6px) scaleY(.94)}}
-  .t-shot .fbody{animation:t-shot 2.1s cubic-bezier(.4,.7,.3,1) infinite}
-  /* SPRAWL — hips back & heavy, legs kick out */
-  @keyframes t-sprawl{0%,100%{transform:translateY(0) rotate(0)}42%{transform:translate(-8px,16px) rotate(-6deg)}}
-  @keyframes t-sprawl-leg{0%,100%{transform:rotate(0)}42%{transform:rotate(24deg)}}
-  .t-sprawl .fbody{animation:t-sprawl 1.9s ease-in-out infinite}
-  .t-sprawl .f-leg-l,.t-sprawl .f-leg-r{animation:t-sprawl-leg 1.9s ease-in-out infinite}
-  /* PIVOT — step off on an angle */
-  @keyframes t-pivot{0%,100%{transform:rotate(0)}50%{transform:rotate(20deg)}}
-  .t-pivot .fbody{animation:t-pivot 2.2s ease-in-out infinite}
-  /* GUARD — break the opponent's posture, then they re-post */
-  @keyframes t-guardpull{0%,100%{transform:rotate(0) translate(0,0)}46%{transform:rotate(-15deg) translate(-11px,9px)}}
-  @keyframes t-guardgrip{0%,100%{transform:translate(0,0)}46%{transform:translate(-9px,7px)}}
-  .tg-guard .gtop{animation:t-guardpull 2.6s ease-in-out infinite}
-  .tg-guard .gb-pull{animation:t-guardgrip 2.6s ease-in-out infinite}
-}
+.tdemo .gtop{opacity:.7}
+/* the figure motion is driven by inline SMIL (true joint articulation); only the
+   target reticle pulses via CSS */
+@keyframes t-target-pulse{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.18);opacity:.72}}
+.tdemo .t-target{transform-box:fill-box;transform-origin:center;animation:t-target-pulse 1.5s ease-in-out infinite}
 /* ---- technique & skills library ---- */
 .art-row{display:flex;flex-wrap:wrap;gap:8px}
 .art-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:999px;cursor:pointer;
@@ -525,7 +462,7 @@ a.nolink{text-decoration:none;text-align:center}
 /* ===== launch sign-in gate ===== */
 #authGate{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px;
   background:radial-gradient(120% 120% at 50% -10%,rgba(200,168,75,.10),transparent 55%),rgba(8,8,8,.92);
-  backdrop-filter:blur(10px);animation:agfade .4s ease both}
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);animation:agfade .4s ease both}
 #authGate.show{display:flex}
 @keyframes agfade{from{opacity:0}to{opacity:1}}
 .ag-card{width:100%;max-width:400px;background:linear-gradient(180deg,var(--card),#101010);border:1px solid var(--line);
@@ -564,7 +501,7 @@ a.nolink{text-decoration:none;text-align:center}
 .tab.active{color:var(--gold);border-bottom-color:var(--gold)}
 
 /* modal */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);z-index:200;
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);z-index:200;
   display:flex;align-items:center;justify-content:center;padding:20px;animation:fade .15s}
 .modal{background:var(--elev);border:1px solid var(--line);border-top:2px solid var(--gold);
   border-radius:3px;max-width:520px;width:100%;max-height:88vh;overflow-y:auto;padding:24px;
@@ -4203,41 +4140,132 @@ function seedReels(){
   return d.map((r,i)=>({id:'r'+i,platform:'youtube',vid:r[0],title:r[1],author:r[2],tag:r[3],
     url:'https://www.youtube.com/watch?v='+r[0],seed:true}));
 }
+/* ============================================================================
+   ARTICULATED TECHNIQUE FIGURES — true joint motion via inline SMIL.
+   Each limb is a 3-point path (shoulder/hip → elbow/knee → hand/foot) that we
+   morph between keyframes with <animate attributeName="d">. The whole body can
+   additionally translate/rotate via <animateTransform>. Orthodox stance, the
+   fighter faces right; the opponent stands on the right.
+   ============================================================================ */
+const KT='0;0.2;0.38;1';            // default strike timing: snap out, brief peak, recover
+const EASE='.15 .8 .3 1;.4 .05 .55 1;.5 0 .55 1';   // 3 segments (4 keyframes)
+const EASE_SMOOTH='.45 0 .55 1;.45 0 .55 1;.45 0 .55 1';
+// guard-stance joints
+const J={
+  head:[70,42],
+  gLA:[[73,59],[80,54],[86,49]],    // lead arm  (jab side, nearer opponent)
+  gRA:[[66,59],[72,55],[78,50]],    // rear arm  (power side)
+  gLL:[[74,90],[83,112],[90,134]],  // lead leg  (front)
+  gRL:[[66,90],[60,112],[54,134]]   // rear leg  (back)
+};
+function _lp(p){return `M${p[0][0]},${p[0][1]} L${p[1][0]},${p[1][1]} L${p[2][0]},${p[2][1]}`;}
+function _aPath(cls,frames,dur,kt,spl){
+  const v=frames.map(_lp).join(';');
+  return `<path class="${cls}" d="${_lp(frames[0])}"><animate attributeName="d" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${v}" keySplines="${spl}"/></path>`;
+}
+function _aCirc(cls,pts,r,dur,kt,spl){
+  const cx=pts.map(p=>p[0]).join(';'),cy=pts.map(p=>p[1]).join(';');
+  return `<circle class="${cls}" r="${r}" cx="${pts[0][0]}" cy="${pts[0][1]}">`+
+    `<animate attributeName="cx" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${cx}" keySplines="${spl}"/>`+
+    `<animate attributeName="cy" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${cy}" keySplines="${spl}"/></circle>`;
+}
+function _aFoot(frames,dur,kt,spl){
+  const cx=frames.map(f=>f[2][0]).join(';'),cy=frames.map(f=>f[2][1]).join(';');
+  return `<ellipse class="f-foot-c" rx="6" ry="2.6" cx="${frames[0][2][0]}" cy="${frames[0][2][1]}">`+
+    `<animate attributeName="cx" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${cx}" keySplines="${spl}"/>`+
+    `<animate attributeName="cy" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${cy}" keySplines="${spl}"/></ellipse>`;
+}
+function _sPath(cls,p){return `<path class="${cls}" d="${_lp(p)}"/>`;}
+/* Render a standing fighter. pose: {leadArm,rearArm,leadLeg,rearLeg} each an
+   array of 3-point frames (or omitted = hold guard); plus body trans/rot. */
+function standFighter(pose){
+  pose=pose||{};
+  const d=pose.dur||1.5,kt=pose.kt||KT,sp=pose.ease||EASE;
+  const arm=(cls,fr,g)=> fr
+    ? _aPath('f-limb '+cls,fr,d,kt,sp)+_aCirc('f-glove',fr.map(f=>f[2]),6,d,kt,sp)
+    : _sPath('f-limb '+cls,g)+`<circle class="f-glove" cx="${g[2][0]}" cy="${g[2][1]}" r="6"/>`;
+  const leg=(cls,fr,g)=> fr
+    ? _aPath('f-limb f-shin '+cls,fr,d,kt,sp)+_aFoot(fr,d,kt,sp)
+    : _sPath('f-limb f-shin '+cls,g)+`<ellipse class="f-foot-c" cx="${g[2][0]}" cy="${g[2][1]}" rx="6" ry="2.6"/>`;
+  const inner=
+    leg('',pose.rearLeg,J.gRL)+
+    arm('',pose.rearArm,J.gRA)+
+    leg('',pose.leadLeg,J.gLL)+
+    `<path class="f-hip" d="M64,89 L76,89 L75,97 L65,97 Z"/>`+
+    `<path class="f-torso" d="M63,58 C61,71 63,84 66,92 L74,92 C77,84 79,71 77,58 C74,54 66,54 63,58 Z"/>`+
+    `<g class="f-head"><circle class="f-skull" cx="70" cy="42" r="11"/><path class="f-face" d="M76,39 L80,41 M73,45 L77,46"/></g>`+
+    arm('',pose.leadArm,J.gLA);
+  let anims='';
+  if(pose.trans) anims+=`<animateTransform attributeName="transform" type="translate" additive="sum" dur="${d}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${pose.trans}" keySplines="${sp}"/>`;
+  if(pose.rot)   anims+=`<animateTransform attributeName="transform" type="rotate" additive="sum" dur="${d}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="${pose.rot}" keySplines="${sp}"/>`;
+  return `<g class="fbody">${anims}${inner}</g>`;
+}
+/* Per-technique choreography. target = strike contact point. */
+const STRIKES={
+  jab:{target:[126,59],fx:1,pose:{
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,58],[95,57],[110,58]],[[74,58],[101,58],[124,59]],[[73,59],[80,54],[86,49]]],
+    trans:'0 0;1 0;3 0;0 0'}},
+  cross:{target:[128,60],fx:1,pose:{
+    rearArm:[[[66,59],[72,55],[78,50]],[[68,58],[93,58],[114,59]],[[70,59],[101,59],[126,60]],[[66,59],[72,55],[78,50]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[74,58],[78,53],[82,50]],[[74,58],[78,53],[81,51]],[[73,59],[80,54],[86,49]]],
+    rot:'0 70 89;7 70 89;11 70 89;0 70 89'}},
+  hook:{target:[122,58],fx:1,pose:{
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,57],[88,49],[97,45]],[[73,58],[96,55],[119,59]],[[73,59],[80,54],[86,49]]],
+    rot:'0 70 89;-5 70 89;7 70 89;0 70 89'}},
+  uppercut:{target:[114,48],fx:1,pose:{
+    rearArm:[[[66,59],[72,55],[78,50]],[[66,63],[71,69],[76,73]],[[68,60],[89,53],[112,46]],[[66,59],[72,55],[78,50]]],
+    trans:'0 0;0 5;0 -2;0 0'}},
+  overhand:{target:[123,59],fx:1,pose:{
+    rearArm:[[[66,59],[72,55],[78,50]],[[66,56],[63,49],[66,43]],[[69,57],[93,49],[121,59]],[[66,59],[72,55],[78,50]]],
+    rot:'0 70 89;-4 70 89;9 70 89;0 70 89',trans:'0 0;0 -1;2 2;0 0'}},
+  teep:{target:[128,92],fx:1,kt:'0;0.22;0.42;1',pose:{
+    leadLeg:[[[74,90],[83,112],[90,134]],[[73,90],[86,101],[90,103]],[[73,91],[97,97],[124,95]],[[74,90],[83,112],[90,134]]],
+    rot:'0 54 134;-5 54 134;-9 54 134;0 54 134'}},
+  lowkick:{target:[124,120],fx:1,kt:'0;0.22;0.42;1',pose:{
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,90],[57,107],[49,127]],[[68,92],[93,116],[123,127]],[[66,90],[60,112],[54,134]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,56],[79,49],[83,44]],[[73,61],[67,71],[59,80]],[[73,59],[80,54],[86,49]]],
+    rot:'0 90 134;-4 90 134;13 90 134;0 90 134'}},
+  slip:{kt:'0;0.3;0.62;1',ease:EASE_SMOOTH,pose:{
+    ease:EASE_SMOOTH,trans:'0 0;-7 5;-7 5;0 0',rot:'0 70 89;-7 70 89;-7 70 89;0 70 89'}},
+  pivot:{kt:'0;0.35;0.68;1',ease:EASE_SMOOTH,noOppo:1,pose:{
+    ease:EASE_SMOOTH,trans:'0 0;-3 0;-3 0;0 0',rot:'0 90 134;-18 90 134;-18 90 134;0 90 134'}}
+};
+function _oppoBack(){
+  return `<g class="oppo">
+      <path class="o-leg" d="M148,96 L143,128"/><path class="o-leg" d="M156,96 L163,128"/>
+      <path class="o-body" d="M143,56 C141,73 144,88 148,96 L156,96 C160,86 162,72 159,56 C155,52 147,52 143,56 Z"/>
+      <circle class="o-body" cx="150" cy="44" r="10"/>
+      <circle class="o-glove" cx="140" cy="45" r="5"/><circle class="o-glove" cx="142" cy="54" r="5"/>
+    </g>`;
+}
+function _target(x,y){return `<circle class="t-target" cx="${x}" cy="${y}" r="9"/><circle class="t-target-dot" cx="${x}" cy="${y}" r="2.4"/>`;}
+function _impact(x,y,dur,kt){
+  return `<g class="t-impact" transform="translate(${x},${y})">
+      <circle r="9"/>
+      <line x1="0" y1="-9" x2="0" y2="-15"/><line x1="0" y1="9" x2="0" y2="15"/>
+      <line x1="-9" y1="0" x2="-15" y2="0"/><line x1="9" y1="0" x2="15" y2="0"/>
+      <line x1="-6" y1="-6" x2="-11" y2="-11"/><line x1="6" y1="-6" x2="11" y2="-11"/>
+      <line x1="-6" y1="6" x2="-11" y2="11"/><line x1="6" y1="6" x2="11" y2="11"/>
+      <animate attributeName="opacity" dur="${dur}s" repeatCount="indefinite" keyTimes="0;0.3;0.4;0.55;1" values="0;0;1;0;0"/>
+      <animateTransform attributeName="transform" type="scale" additive="sum" dur="${dur}s" repeatCount="indefinite" keyTimes="0;0.3;0.4;1" values="0.4;0.4;1.2;1.2"/>
+    </g>`;
+}
 /* Reusable animated technique figure used across demos & the technique library */
 function fighterSVG(tech){
   tech=tech||'guard';
   if(tech==='guard') return guardSceneSVG();
   if(tech==='shot'||tech==='sprawl') return grappleSceneSVG(tech);
-  const striking=['jab','cross','hook','uppercut','overhand','teep','lowkick'].includes(tech);
+  const cfg=STRIKES[tech]||STRIKES.jab;
+  const dur=cfg.dur||1.5,kt=cfg.kt||KT,ease=cfg.ease||EASE;
+  const pose=Object.assign({dur,kt,ease},cfg.pose);
   return `<svg class="tdemo t-${tech}" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated technique demonstration">
     ${FLOOR_SVG}
-    <ellipse class="t-shadow" cx="72" cy="137" rx="34" ry="5"/>
-    <ellipse class="t-shadow" cx="148" cy="137" rx="24" ry="4"/>
-    <!-- opponent (facing back toward you) -->
-    <g class="oppo">
-      <path class="o-leg" d="M148,96 L143,128"/><path class="o-leg" d="M156,96 L163,128"/>
-      <path class="o-body" d="M143,56 C141,73 144,88 148,96 L156,96 C160,86 162,72 159,56 C155,52 147,52 143,56 Z"/>
-      <circle class="o-body" cx="150" cy="44" r="10"/>
-      <circle class="o-glove" cx="140" cy="45" r="5"/><circle class="o-glove" cx="142" cy="54" r="5"/>
-    </g>
-    <!-- strike target + impact burst -->
-    <circle class="t-target" cx="122" cy="60" r="9"/><circle class="t-target-dot" cx="122" cy="60" r="2.4"/>
-    ${striking?`<path class="t-trail" d="M92,46 Q114,44 122,60"/>
-    <g class="t-impact"><circle cx="122" cy="60" r="11"/>
-      <line x1="122" y1="45" x2="122" y2="39"/><line x1="122" y1="75" x2="122" y2="81"/>
-      <line x1="107" y1="60" x2="101" y2="60"/><line x1="137" y1="60" x2="143" y2="60"/>
-      <line x1="111" y1="49" x2="106" y2="44"/><line x1="133" y1="49" x2="138" y2="44"/>
-      <line x1="111" y1="71" x2="106" y2="76"/><line x1="133" y1="71" x2="138" y2="76"/></g>`:''}
-    <!-- main fighter (orthodox, lead side forward) -->
-    <g class="fbody">
-      <g class="f-leg f-leg-l"><path class="f-up" d="M66,93 L60,115"/><path d="M60,115 L55,134"/><ellipse class="f-foot" cx="56" cy="135" rx="6.5" ry="3"/></g>
-      <g class="f-leg f-leg-r"><path class="f-up" d="M74,93 L84,114"/><path d="M84,114 L90,134"/><ellipse class="f-foot" cx="90" cy="135" rx="6.5" ry="3"/></g>
-      <path class="f-hip" d="M64,89 L76,89 L75,97 L65,97 Z"/>
-      <g class="f-arm f-arm-l"><path class="f-up" d="M67,60 Q70,52 75,47"/><path d="M75,47 L80,44"/><circle class="f-glove" cx="81" cy="43" r="6"/></g>
-      <path class="f-torso" d="M63,58 C61,71 63,84 66,92 L74,92 C77,84 79,71 77,58 C74,54 66,54 63,58 Z"/>
-      <g class="f-head"><circle class="f-skull" cx="70" cy="44" r="11"/><path class="f-face" d="M76,41 L80,43 M73,47 L77,48"/></g>
-      <g class="f-arm f-arm-r"><path class="f-up" d="M73,60 Q79,53 84,48"/><path d="M84,48 L88,45"/><circle class="f-glove" cx="89" cy="44" r="6"/></g>
-    </g>
+    <ellipse class="t-shadow" cx="72" cy="136" rx="34" ry="5"/>
+    ${cfg.noOppo?'':'<ellipse class="t-shadow" cx="150" cy="136" rx="22" ry="4"/>'}
+    ${cfg.noOppo?'':_oppoBack()}
+    ${cfg.target?_target(cfg.target[0],cfg.target[1]):''}
+    ${cfg.fx&&cfg.target?_impact(cfg.target[0],cfg.target[1],dur,kt):''}
+    ${standFighter(pose)}
   </svg>`;
 }
 const FLOOR_SVG=`<g class="floor">
@@ -4250,25 +4278,29 @@ const FLOOR_SVG=`<g class="floor">
       <line class="fl-base" x1="0" y1="138" x2="200" y2="138"/>
     </g>`;
 /* Ground scene — bottom fighter (you) in closed guard, top fighter postured over.
-   Animates a posture-break: you pull the opponent's head down and squeeze. */
+   SMIL animates a posture-break: you pull the opponent's head down and squeeze. */
 function guardSceneSVG(){
+  const dur=2.0,kt='0;0.4;0.62;1',sp=EASE_SMOOTH;
   return `<svg class="tdemo tg-guard" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated closed-guard demonstration">
     ${FLOOR_SVG}
     <ellipse class="t-shadow" cx="98" cy="135" rx="62" ry="6"/>
-    <!-- TOP fighter (opponent) — kneeling, posture gets broken down -->
+    <!-- TOP fighter (opponent) — posture broken down toward you, then recovers -->
     <g class="gtop oppo">
+      <animateTransform attributeName="transform" type="translate" additive="sum" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="0 0;-7 9;-7 9;0 0" keySplines="${sp}"/>
+      <animateTransform attributeName="transform" type="rotate" additive="sum" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="0 119 106;9 119 106;9 119 106;0 119 106" keySplines="${sp}"/>
       <path class="o-leg" d="M112,104 L100,131"/><path class="o-leg" d="M126,104 L138,131"/>
       <path class="o-body" d="M110,64 C108,80 110,96 113,105 L126,105 C129,96 131,80 129,64 C124,60 115,60 110,64 Z"/>
       <circle class="o-head" cx="119" cy="52" r="10"/>
       <path class="o-arm" d="M112,70 Q103,86 95,100"/><path class="o-arm" d="M127,70 Q136,86 143,100"/>
     </g>
-    <!-- BOTTOM fighter (you) — on your back, head to the left -->
+    <!-- BOTTOM fighter (you) — on your back, head to the left, pulling them in -->
     <g class="gbot">
       <path class="gb-leg" d="M84,120 Q106,110 122,98 Q134,89 131,76"/>
       <path class="gb-leg" d="M84,126 Q108,126 126,116 Q141,108 138,94"/>
       <path class="gb-torso" d="M50,113 C48,119 49,125 55,128 L88,124 C92,121 92,114 87,111 C73,108 58,108 50,113 Z"/>
       <circle class="gb-head" cx="44" cy="119" r="10"/>
       <g class="gb-pull">
+        <animateTransform attributeName="transform" type="translate" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="0 0;-5 7;-5 7;0 0" keySplines="${sp}"/>
         <path class="gb-arm" d="M58,114 Q82,96 108,66"/><path class="gb-arm" d="M62,121 Q88,104 114,72"/>
         <circle class="gb-grip" cx="110" cy="66" r="4"/><circle class="gb-grip" cx="116" cy="72" r="4"/>
       </g>
@@ -4277,10 +4309,25 @@ function guardSceneSVG(){
 }
 /* Standing engagement scene for shot / sprawl — two fighters clashing, no strike target */
 function grappleSceneSVG(tech){
+  const shot=tech==='shot',dur=1.7,kt='0;0.32;0.56;1',ease=EASE_SMOOTH;
+  const pose= shot ? {
+    dur,kt,ease,
+    leadArm:[[[73,59],[80,54],[86,49]],[[72,66],[92,79],[112,90]],[[72,66],[92,79],[112,90]],[[73,59],[80,54],[86,49]]],
+    rearArm:[[[66,59],[72,55],[78,50]],[[66,66],[86,80],[108,92]],[[66,66],[86,80],[108,92]],[[66,59],[72,55],[78,50]]],
+    leadLeg:[[[74,90],[83,112],[90,134]],[[80,96],[97,116],[112,132]],[[80,96],[97,116],[112,132]],[[74,90],[83,112],[90,134]]],
+    trans:'0 0;15 10;15 10;0 0',rot:'0 70 89;11 70 89;11 70 89;0 70 89'
+  } : {
+    dur,kt,ease,
+    leadLeg:[[[74,90],[83,112],[90,134]],[[74,95],[68,119],[58,134]],[[74,95],[68,119],[58,134]],[[74,90],[83,112],[90,134]]],
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,95],[52,119],[40,133]],[[66,95],[52,119],[40,133]],[[66,90],[60,112],[54,134]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[74,66],[91,79],[106,87]],[[74,66],[91,79],[106,87]],[[73,59],[80,54],[86,49]]],
+    rearArm:[[[66,59],[72,55],[78,50]],[[68,66],[84,80],[100,89]],[[68,66],[84,80],[100,89]],[[66,59],[72,55],[78,50]]],
+    trans:'0 0;-5 11;-5 11;0 0',rot:'0 70 89;15 70 89;15 70 89;0 70 89'
+  };
   return `<svg class="tdemo t-${tech} t-engage" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated takedown demonstration">
     ${FLOOR_SVG}
-    <ellipse class="t-shadow" cx="74" cy="137" rx="34" ry="5"/>
-    <ellipse class="t-shadow" cx="138" cy="137" rx="28" ry="5"/>
+    <ellipse class="t-shadow" cx="80" cy="137" rx="38" ry="5"/>
+    <ellipse class="t-shadow" cx="140" cy="137" rx="26" ry="5"/>
     <!-- opponent (defending) -->
     <g class="oppo eng">
       <path class="o-leg" d="M140,96 L134,130"/><path class="o-leg" d="M150,96 L160,130"/>
@@ -4288,16 +4335,7 @@ function grappleSceneSVG(tech){
       <circle class="o-body" cx="144" cy="44" r="10"/>
       <path class="o-arm2" d="M137,60 Q126,66 116,72"/><path class="o-arm2" d="M151,60 Q160,68 167,78"/>
     </g>
-    <!-- main fighter (shooting / sprawling) -->
-    <g class="fbody">
-      <g class="f-leg f-leg-l"><path class="f-up" d="M66,93 L60,115"/><path d="M60,115 L55,134"/><ellipse class="f-foot" cx="56" cy="135" rx="6.5" ry="3"/></g>
-      <g class="f-leg f-leg-r"><path class="f-up" d="M74,93 L84,114"/><path d="M84,114 L90,134"/><ellipse class="f-foot" cx="90" cy="135" rx="6.5" ry="3"/></g>
-      <path class="f-hip" d="M64,89 L76,89 L75,97 L65,97 Z"/>
-      <g class="f-arm f-arm-l"><path class="f-up" d="M67,60 Q78,64 90,70"/><path d="M90,70 L100,76"/><circle class="f-glove" cx="102" cy="77" r="6"/></g>
-      <path class="f-torso" d="M63,58 C61,71 63,84 66,92 L74,92 C77,84 79,71 77,58 C74,54 66,54 63,58 Z"/>
-      <g class="f-head"><circle class="f-skull" cx="70" cy="44" r="11"/><path class="f-face" d="M76,41 L80,43 M73,47 L77,48"/></g>
-      <g class="f-arm f-arm-r"><path class="f-up" d="M73,60 Q84,64 96,71"/><path d="M96,71 L106,78"/><circle class="f-glove" cx="108" cy="79" r="6"/></g>
-    </g>
+    ${standFighter(pose)}
   </svg>`;
 }
 /* ===== VAST TECHNIQUE & SKILLS LIBRARY (per martial art) ===== */
@@ -5481,11 +5519,12 @@ function initPWA(){
   window.addEventListener('appinstalled',()=>{_deferredPrompt=null;const c=$('#installChip');if(c)c.remove();toast('OCTAGON installed','green');});
   // service worker for offline app shell (only over http/https; no-op on file://)
   if('serviceWorker'in navigator&&location.protocol.startsWith('http')){
-    const swSrc=`const C='octagon-v2';const ASSETS=[self.registration.scope];
+    const swSrc=`const C='octagon-v3';const ASSETS=[self.registration.scope];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(ASSETS).catch(()=>{})));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
+/* network-first: always fetch the freshest app when online, fall back to cache offline */
 self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;
-  e.respondWith(caches.match(r).then(hit=>hit||fetch(r).then(res=>{const cp=res.clone();caches.open(C).then(c=>{try{c.put(r,cp);}catch(_){}});return res;}).catch(()=>hit)));});`;
+  e.respondWith(fetch(r).then(res=>{const cp=res.clone();caches.open(C).then(c=>{try{c.put(r,cp);}catch(_){}});return res;}).catch(()=>caches.match(r)));});`;
     try{
       const swUrl=URL.createObjectURL(new Blob([swSrc],{type:'text/javascript'}));
       navigator.serviceWorker.register(swUrl).catch(()=>{/* blob SW unsupported here — degrade silently */});
