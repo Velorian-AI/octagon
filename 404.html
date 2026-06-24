@@ -4447,6 +4447,24 @@ const TECH_LIBRARY=[
     {n:'Cutting the Cage',lvl:'Advanced',tech:'pivot',cues:['Use the cage as a wall to trap, not a place to get pinned.','Herd them toward the fence with footwork and feints.','Close the exits before you commit to offense.']}
   ]}
 ];
+/* Maps every technique without an explicit `tech` to the closest animated demo so
+   no standing strike ever shows the ground-guard scene by mistake. */
+const DEMO_FALLBACK={
+  // Boxing
+  'Rear Hook':'hook','Uppercut':'uppercut','Overhand':'overhand','Body Punching':'hook','Shoulder Roll & Defense':'slip',
+  // Muay Thai
+  'Switch Kick':'lowkick','Horizontal & Diagonal Elbows':'hook','Straight Knee':'teep','Clinch Knees & Elbows':'teep','Diagonal Knee (Diagonal Up-Knee)':'teep','Long Knee':'teep',
+  // Wrestling
+  'Stance & Level Change':'shot','Whizzer & Underhooks':'sprawl','Body Lock':'shot','Snap Down & Front Headlock':'sprawl','Russian Tie (2-on-1)':'shot','Front Headlock Series':'sprawl',
+  // BJJ / Grappling — all ground positions use the closed-guard ground scene
+  'Triangle Choke':'guard','Armbar from Guard':'guard','Armbar Escape':'guard','Guard Passing':'guard','Taking the Back':'guard','Rear Naked Choke':'guard','Mount Control & Attacks':'guard','Side Control':'guard','Kimura':'guard','Guillotine Choke':'guard','Americana (Keylock)':'guard','Bow & Arrow Choke':'guard','Back Escape':'guard','Knee-on-Belly':'guard','Leg-Lock Entries (Ashi Garami)':'guard',
+  // MMA
+  'Cage Wrestling':'shot','Ground & Pound':'guard','Technical Stand-Up':'guard','Fight IQ & Game Planning':'pivot'
+};
+function demoTech(it){
+  if(it&&it.tech) return it.tech;
+  return (it&&DEMO_FALLBACK[it.n])||'pivot';
+}
 function seedProClips(){
   const d=[
     ['Israel Adesanya','Range striking & the long jab','Striking','How Izzy uses distance management, the in-and-out lead, and feints to bait reactions before landing the straight.','https://www.youtube.com/results?search_query=israel+adesanya+striking+breakdown'],
@@ -4570,7 +4588,7 @@ function filmTechniques(){
 }
 function techCard(a,it,ai,ii){
   return`<div class="card tech-card" style="--ac:${a.color}" onclick="openTech(${ai},${ii})">
-    <div class="tech-demo-wrap" style="--pc:${a.color}">${fighterSVG(it.tech)}${it.vid?'<span class="tech-vidbadge">▶ video</span>':''}</div>
+    <div class="tech-demo-wrap" style="--pc:${a.color}">${fighterSVG(demoTech(it))}${it.vid?'<span class="tech-vidbadge">▶ video</span>':''}</div>
     <div class="row-between mt" style="align-items:flex-start">
       <div class="fw6 fz13" style="line-height:1.25">${esc(it.n)}</div>
       <span class="lvl-dot" style="--lc:${LVL_COLOR[it.lvl]||'#888'}" title="${it.lvl}"></span>
@@ -4587,7 +4605,7 @@ function openTech(ai,ii){
       <button class="x-btn" onclick="closeModal()">✕</button></div>
     ${it.vid?`<div class="reel-frame wide mb"><iframe src="https://www.youtube-nocookie.com/embed/${it.vid}?rel=0" frameborder="0" allow="autoplay;encrypted-media;fullscreen;picture-in-picture" allowfullscreen></iframe></div>
       <div class="row-between mb"><div class="fz11 muted">Tutorial: ${esc(it.author||'')}</div><a class="tech-watch" href="${techSearchURL(a.art,it.n)}" target="_blank" rel="noopener noreferrer">More videos ▸</a></div>`
-      :`<div class="tech-demo-stage" style="--pc:${a.color}">${fighterSVG(it.tech)}<span class="demo-badge">Animated demo</span></div>
+      :`<div class="tech-demo-stage" style="--pc:${a.color}">${fighterSVG(demoTech(it))}<span class="demo-badge">Animated demo</span></div>
       <a class="tech-watch block mb" href="${techSearchURL(a.art,it.n)}" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M10 8l6 4-6 4V8z"/><rect x="2" y="4" width="20" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/></svg> Watch video tutorials for this technique ▸</a>`}
     <div class="fw6 fz13 mt mb">Key cues</div>
     <ul class="cue-list">${it.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ul>
