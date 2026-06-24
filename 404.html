@@ -828,6 +828,7 @@ const CONFIG={
 
 const DEFAULT_STATE={
   onboarded:false,
+  account:null,
   profile:{name:'Fighter',age:'',weightClass:'lightweight',weight:'',height:'',reach:'',
     stance:'orthodox',style:'All-Rounder',disciplines:['MMA'],experience:'amateur',goals:['','',''],
     nextEvent:'',homeGym:'',coach:''},
@@ -5374,23 +5375,54 @@ const _ob={name:'',weightClass:'lightweight',experience:'amateur',disciplines:['
 function startOnboarding(){
   const p=S.profile;
   const nm=p.name&&p.name!=='Fighter'?p.name:'';
+  const em=(S.account&&S.account.email)||'';
   openModal(`<div class="ob">
-    <div class="ob-top"><div class="ob-mark">⬢</div><div><div class="fw7 fz18">Welcome to OCTAGON</div><div class="fz12 muted">Your complete fight-camp HQ</div></div></div>
+    <div class="ob-top"><div class="ob-mark">⬢</div><div><div class="fw7 fz18">Create your account</div><div class="fz12 muted">Your complete fight-camp HQ</div></div></div>
     <div class="ob-screen">
-      <p class="fz13" style="line-height:1.55;color:var(--txt)">Jump straight in — no long setup. Just tell us what to call you and you're in.</p>
-      <p class="fz12 muted" style="line-height:1.5">Want everything tailored to you — weight cut, briefings, partner & coach matches? Fill in your full fighter profile any time in <b class="gold">Settings → Fighter Profile</b>.</p>
-      <label class="lbl mt">What should we call you? <span class="muted">(optional)</span></label>
-      <input id="obName" class="field" placeholder="Your name or fight name" value="${esc(nm)}" autofocus onkeydown="if(event.key==='Enter')welcomeEnter()">
-      <button class="btn block mt" onclick="welcomeEnter()">Enter OCTAGON</button>
+      <p class="fz13" style="line-height:1.5;color:var(--txt)">Set up your OCTAGON account to save your camp on this device.</p>
+      <div id="obErr" class="ag-err" style="margin:2px 0 0"></div>
+      <label class="lbl mt">Name <span class="req">*</span></label>
+      <input id="obName" class="field" placeholder="Your name or fight name" value="${esc(nm)}" autocomplete="name" autofocus onkeydown="if(event.key==='Enter')$('#obEmail').focus()">
+      <label class="lbl mt">Email <span class="req">*</span></label>
+      <input id="obEmail" class="field" type="email" placeholder="you@email.com" autocomplete="email" value="${esc(em)}" onkeydown="if(event.key==='Enter')$('#obPw').focus()">
+      <label class="lbl mt">Create password <span class="req">*</span></label>
+      <input id="obPw" class="field" type="password" placeholder="At least 6 characters" autocomplete="new-password" onkeydown="if(event.key==='Enter')$('#obPw2').focus()">
+      <label class="lbl mt">Confirm password <span class="req">*</span></label>
+      <input id="obPw2" class="field" type="password" placeholder="Re-enter password" autocomplete="new-password" onkeydown="if(event.key==='Enter')welcomeEnter()">
+      <button class="btn block mt" id="obSubmit" onclick="welcomeEnter()">Create account &amp; enter</button>
+      <p class="fz11 muted mt" style="line-height:1.45">🔒 Your password is hashed and stored only on this device — it never leaves your browser. Add weight cut, fight briefings &amp; matches anytime in <b class="gold">Settings → Fighter Profile</b>.</p>
     </div>
   </div>`,false,false);
 }
-function welcomeEnter(){
-  const el=$('#obName');
-  if(el&&el.value&&el.value.trim())S.profile.name=el.value.trim();
+function _hexFromBuf(buf){return Array.from(new Uint8Array(buf),b=>b.toString(16).padStart(2,'0')).join('');}
+function _genSalt(){const a=new Uint8Array(16);(crypto.getRandomValues?crypto:window.crypto).getRandomValues(a);return _hexFromBuf(a.buffer);}
+async function _hashPw(pw,salt){
+  const data=new TextEncoder().encode(salt+':'+pw);
+  if(crypto&&crypto.subtle&&crypto.subtle.digest){
+    return _hexFromBuf(await crypto.subtle.digest('SHA-256',data));
+  }
+  // fallback (non-secure contexts only): simple non-crypto digest so the field still works
+  let h=0x811c9dc5;for(let i=0;i<data.length;i++){h^=data[i];h=Math.imul(h,0x01000193);}
+  return 'fnv'+(h>>>0).toString(16);
+}
+async function welcomeEnter(){
+  const g=id=>{const e=$('#'+id);return e?e.value:'';};
+  const name=g('obName').trim(),email=g('obEmail').trim(),pw=g('obPw'),pw2=g('obPw2');
+  const errEl=$('#obErr');
+  const fail=m=>{if(errEl){errEl.textContent=m;}else toast(m,'red');const f=$('#obSubmit');if(f)f.disabled=false;return false;};
+  if(!name)return fail('Please enter your name.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return fail('Please enter a valid email address.');
+  if(pw.length<6)return fail('Password must be at least 6 characters.');
+  if(pw!==pw2)return fail("Passwords don't match.");
+  const btn=$('#obSubmit');if(btn)btn.disabled=true;
+  const salt=_genSalt();
+  const hash=await _hashPw(pw,salt);
+  S.profile.name=name;
+  S.account={name,email:email.toLowerCase(),salt,hash,createdAt:Date.now()};
+  if(S.cloud)S.cloud.email=S.cloud.email||email.toLowerCase();
   S.onboarded=true;save();closeModal();refreshTopbar();
-  logActivity('settings','Joined OCTAGON');
-  toast('Welcome to OCTAGON','green');go('dashboard');
+  logActivity('settings','Created OCTAGON account');
+  toast('Account created — welcome to OCTAGON','green');go('dashboard');
 }
 const OB_TITLES={1:'Who are you?',2:'Your game',3:'Fight & weight',4:'Camp & corner'};
 function renderOnboarding(){
