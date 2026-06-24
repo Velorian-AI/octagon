@@ -845,6 +845,7 @@ const DEFAULT_STATE={
   gyms:null, favGyms:[], coaches:null, bookings:[], seminars:[], cornerRequests:[],
   fights:[], rankings:[], belts:[],
   reels:null, tapes:[], proClips:null,
+  sparLogs:[], reminders:{enabled:false,time:'18:00',days:[1,2,3,4,5],lastFired:''},
   contacts:{},
   activity:[]
 };
@@ -1851,15 +1852,133 @@ function delMistake(id){S.mistakes=S.mistakes.filter(m=>m.id!==id);save();go('tr
 /* ---------- DRILL BUILDER ---------- */
 function trainDrills(){
   return`<div class="between mb"><div class="section-title" style="margin:0">Drill Builder<span class="ln" style="width:40px"></span></div>
-    <button class="btn" onclick="openDrillBuilder()">${icon('plus')} New Sequence</button></div>
+    <div class="row gap"><button class="btn" onclick="openDrillGenerator()">${icon('bolt')} Generate Session</button>
+    <button class="btn ghost" onclick="openDrillBuilder()">${icon('plus')} New Sequence</button></div></div>
     ${S.drills.length?`<div class="grid g-auto">${S.drills.map(d=>`<div class="card active-top">
       <div class="between"><span class="fw6">${esc(d.name)}</span><button class="x-btn" onclick="delDrill('${d.id}')">✕</button></div>
-      <div class="fz12 muted mt">${d.steps.length} drills · ${Math.round(d.steps.reduce((a,s)=>a+ +s.dur+ +s.rest,0)/60)}min total</div>
+      <div class="fz12 muted mt">${d.steps.length} drills · ${Math.round(d.steps.reduce((a,s)=>a+ +s.dur+ +s.rest,0)/60)}min total${d.gen?' · <span class="gold">AI session</span>':''}</div>
+      ${d.note?`<div class="fz11 muted mt" style="font-style:italic;line-height:1.5">${esc(d.note)}</div>`:''}
       <div class="chip-row mt">${d.steps.slice(0,4).map(s=>`<span class="pill">${esc(s.name)}</span>`).join('')}${d.steps.length>4?`<span class="pill">+${d.steps.length-4}</span>`:''}</div>
       <button class="btn block mt" onclick="playDrill('${d.id}')">▶ Play Sequence</button>
     </div>`).join('')}</div>`
-      :emptyState('No drill sequences','Build a timed sequence of drills with rest intervals, then run it hands-free in play mode.')}`;
+      :emptyState('No drill sequences','Hit Generate Session for an instant structured workout, or build your own timed sequence.')}`;
 }
+/* ---------- AI / on-device DRILL GENERATOR ---------- */
+const DRILL_POOL={
+  Striking:{warmup:['Loose shadowboxing','Footwork — step in & out','Neck rolls & shoulder loosener','Light bounce & range-finding jab'],
+    technical:['Jab–cross down the centre','1-2-3 combinations','Slip & counter-cross','Body–head level changes','Lead hook off the jab','Pivot off the lead after a combo','Check hook on the retreat','Teep to manage distance','Rear-hand counter timing','Double jab into cross'],
+    conditioning:['Burnout punches — max output','Sprawl to punch','Push-up into shadowbox','Lateral shuffle & blast'],
+    cooldown:['Slow shadowbox & breathe','Static stretch — shoulders & hips'],
+    equip:{'Heavy bag':['Power cross on the bag','6-punch bag combos','Body-rip circuit','Continuous bag pressure'],'Pads/Mitts':['Mitt flow combinations','React-and-fire on the call'],'Jump rope':['Speed-rope intervals','Double-under bursts']}},
+  Boxing:{warmup:['Loose shadowboxing','Footwork ladder — in/out','Rotational trunk warmup','Range-finding jab'],
+    technical:['Double & triple jab','Jab–cross–hook','Slip–slip–counter','Roll under the hook & rip','Body jab to head cross','Check hook & pivot','Counter off the pull','Up-jab to down-cross','Long-range pot-shots','Inside uppercut–hook'],
+    conditioning:['Burnout straight punches','Hooks-only burst','Push-up to combo','Shadowbox sprint round'],
+    cooldown:['Slow shadow & breathe','Shoulder & neck stretch'],
+    equip:{'Heavy bag':['Power combos on the bag','Speed combos on the bag','Bodywork on the bag'],'Pads/Mitts':['Mitt flow','Defensive react drills'],'Jump rope':['Speed rope','Footwork rope intervals']}},
+  'Muay Thai':{warmup:['Loose shadow with kicks','Teep & switch step','Hip-opener mobility','Light knee march'],
+    technical:['Jab–cross–left kick','Teep to set up the cross','Switch kick off the lead','Elbow off the catch','Knee in the clinch','Check & return low kick','Body kick after the jab','Long guard & teep','Catch kick to sweep','Diagonal up-knee'],
+    conditioning:['Kick burnout — alternating','Knee burst on the bag','Sprawl to knee','Teep & sprint footwork'],
+    cooldown:['Slow shadow & breathe','Hip & hamstring stretch'],
+    equip:{'Heavy bag':['Power left kick on the bag','Kick–knee bag circuit','Continuous teep & kick'],'Pads/Mitts':['Thai pad flow','Kick-on-the-call drill'],'Partner':['Clinch sparring — light','Catch-and-return kicks']}},
+  Wrestling:{warmup:['Hip heists & sprawls','Stance & motion','Shot setups — no finish','Penetration step drill'],
+    technical:['Double-leg entry & finish','Single-leg to the corner','Sprawl & spin behind','Snap down to front headlock','Level change to body lock','Mat return from the back','Underhook to throw-by','Duck-under series','Re-shot chain — shot to shot','Cage-wall body lock'],
+    conditioning:['Sprawl burpees — max','Shot-to-sprawl shuttle','Bear-crawl & shot','Mat returns for time'],
+    cooldown:['Light movement & breathe','Hip & lower-back stretch'],
+    equip:{'Grappling dummy':['Double-leg lifts on the dummy','Mat returns on the dummy','Back-take on the dummy'],'Partner':['Live shot & sprawl','Body-lock to mat return']}},
+  BJJ:{warmup:['Hip escapes (shrimping)','Technical stand-up','Bridge & roll','Forward & backward rolls'],
+    technical:['Guard retention — frame & reframe','Hip-escape to recover guard','Scissor sweep entry','Triangle setup from guard','Armbar from guard','Knee-cut pass','Body-lock pass pressure','Back-take from turtle','Mount control & high-mount climb','Guillotine entry from the scramble'],
+    conditioning:['Sprawl & stand for time','Shrimp the length of the mat','Bridge burnout','Sit-out & re-guard'],
+    cooldown:['Slow flow roll — breathe','Spine & hip mobility'],
+    equip:{'Grappling dummy':['Pass-to-mount on the dummy','Back-take on the dummy','Submission entries on the dummy'],'Partner':['Positional sparring — guard retention','Flow roll — light']}},
+  MMA:{warmup:['Loose shadow with level changes','Sprawl & shoot motion','Stance switches & footwork','Hip-opener mobility'],
+    technical:['Jab–cross into level change','Strike to takedown entry','Sprawl to punch counter','Cage wrestling — wall escapes','Ground & pound posture & strike','Get-up from bottom (technical stand)','Kick-catch to takedown','Clinch knee to break','Submission chain from top','Back-take after the takedown'],
+    conditioning:['Shot-sprawl-strike shuttle','Burpee to shadow combo','Get-up & blast — max output','Wall-wrestle for time'],
+    cooldown:['Slow shadow & breathe','Full-body mobility flow'],
+    equip:{'Heavy bag':['Strike-to-clinch on the bag','Ground & pound on the bag','Knee–elbow bag circuit'],'Grappling dummy':['Ground & pound on the dummy','Submission entries on the dummy'],'Partner':['Light MMA sparring rounds','Takedown to control']}}
+};
+const DRILL_DISCIPLINES=Object.keys(DRILL_POOL);
+const DRILL_EQUIP=['None','Heavy bag','Pads/Mitts','Jump rope','Grappling dummy','Partner'];
+let _drillGen={discipline:'Striking',minutes:20,equip:['None'],intensity:'Moderate'};
+function openDrillGenerator(){
+  const p=S.profile||{};
+  const disc=(p.disciplines&&p.disciplines[0])||'';
+  const map={'Boxing':'Boxing','Muay Thai':'Muay Thai','Kickboxing':'Muay Thai','Wrestling':'Wrestling','BJJ':'BJJ','Jiu-Jitsu':'BJJ','MMA':'MMA'};
+  _drillGen.discipline=map[disc]||DRILL_DISCIPLINES[0];
+  renderDrillGenerator();
+}
+function renderDrillGenerator(){
+  const g=_drillGen;
+  openModal(`<div class="modal-head"><h2>Generate Drill Session</h2><button class="x-btn" onclick="closeModal()">✕</button></div>
+    <p class="fz12 muted mb">Pick a focus and a time budget — OCTAGON builds a structured, timed session (warm-up → technical → conditioning → cool-down) you can run hands-free.</p>
+    <label class="field"><span>Discipline</span>
+      <select class="inp" onchange="_drillGen.discipline=this.value">${DRILL_DISCIPLINES.map(d=>`<option ${g.discipline===d?'selected':''}>${d}</option>`).join('')}</select></label>
+    <label class="field"><span>Time available — <b id="dgMinLbl">${g.minutes}</b> min</span>
+      <input class="inp" type="range" min="8" max="60" step="2" value="${g.minutes}" oninput="_drillGen.minutes=+this.value;document.getElementById('dgMinLbl').textContent=this.value"></label>
+    <label class="field"><span>Intensity</span>
+      <select class="inp" onchange="_drillGen.intensity=this.value">${['Easy','Moderate','Hard'].map(x=>`<option ${g.intensity===x?'selected':''}>${x}</option>`).join('')}</select></label>
+    <div class="fz11 muted mb" style="text-transform:uppercase;letter-spacing:.08em">Equipment</div>
+    <div class="chip-row mb">${DRILL_EQUIP.map(e=>`<span class="chip ${g.equip.indexOf(e)>=0?'on':''}" onclick="_toggleDrillEquip('${e}')">${e}</span>`).join('')}</div>
+    <button class="btn block" onclick="runDrillGenerator()">${icon('bolt')} Build my session</button>`,true);
+}
+function _toggleDrillEquip(e){
+  const g=_drillGen;
+  if(e==='None'){g.equip=['None'];}
+  else{g.equip=g.equip.filter(x=>x!=='None');const i=g.equip.indexOf(e);if(i>=0)g.equip.splice(i,1);else g.equip.push(e);if(!g.equip.length)g.equip=['None'];}
+  renderDrillGenerator();
+}
+function _shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function _fillBlock(steps,pool,budget,work,rest){
+  if(!pool.length)return budget;
+  let q=_shuffle(pool),qi=0;
+  while(budget>=work+rest){
+    if(qi>=q.length)q=_shuffle(pool),qi=0;
+    steps.push({name:q[qi++],dur:work,rest:rest});
+    budget-=(work+rest);
+  }
+  return budget;
+}
+function genDrillSession(opts){
+  const pool=DRILL_POOL[opts.discipline]||DRILL_POOL.Striking;
+  const equip=(opts.equip||[]).filter(e=>e!=='None');
+  let tech=pool.technical.slice();
+  equip.forEach(e=>{if(pool.equip&&pool.equip[e])tech=tech.concat(pool.equip[e]);});
+  const total=Math.max(8,opts.minutes||20)*60;
+  // intensity tunes work/rest ratios
+  const I=opts.intensity||'Moderate';
+  const tWork=I==='Hard'?45:I==='Easy'?30:40, tRest=I==='Hard'?15:I==='Easy'?30:20;
+  const cWork=I==='Hard'?30:I==='Easy'?25:30, cRest=I==='Hard'?15:I==='Easy'?30:20;
+  const steps=[];
+  // warm-up ~15%, technical ~52%, conditioning ~22%, cool-down ~11%
+  _fillBlock(steps,pool.warmup,Math.round(total*0.15),40,15);
+  const wuEnd=steps.length;
+  _fillBlock(steps,tech,Math.round(total*0.52),tWork,tRest);
+  const techEnd=steps.length;
+  _fillBlock(steps,pool.conditioning,Math.round(total*0.22),cWork,cRest);
+  _fillBlock(steps,pool.cooldown,Math.round(total*0.11),60,0);
+  if(steps.length<3){ // tiny budget fallback
+    steps.length=0;_fillBlock(steps,tech,total,tWork,tRest);
+  }
+  const name=`${opts.discipline} · ${opts.minutes}min ${I}`;
+  return {name,steps,wuEnd,techEnd};
+}
+async function runDrillGenerator(){
+  const opts=Object.assign({},_drillGen);
+  const sess=genDrillSession(opts);
+  if(!sess.steps.length){toast('Could not build a session — try more time','red');return;}
+  const drill={id:uid(),name:sess.name,steps:sess.steps.map(s=>({name:s.name,dur:s.dur,rest:s.rest})),gen:true,note:''};
+  S.drills.unshift(drill);saveNow();
+  logActivity('training',`Generated a ${opts.discipline} drill session`);
+  closeModal();toast('Session built — hit Play to run it','green');go('training');
+  // optional AI coaching cue (text only, never blocks)
+  if(aiConfigured()){
+    try{
+      const sys=`You are an MMA strength-and-conditioning coach. ${profileContext()} In ONE short sentence (max 22 words), give a single focus cue for a ${opts.minutes}-minute ${opts.intensity.toLowerCase()} ${opts.discipline} drill session. No preamble.`;
+      const cue=await callClaude([{role:'user',content:`Session drills: ${drill.steps.map(s=>s.name).join(', ')}`}],sys,120);
+      if(cue){const d=S.drills.find(x=>x.id===drill.id);if(d){d.note=cue.trim().replace(/^["']|["']$/g,'');saveNow();if(currentRoute==='training'&&trainTab==='drills')rerenderTrain();}}
+    }catch(e){/* silent — the session already works */}
+  }
+}
+function rerenderTrain(){const h=$('#trainBody');if(h)h.innerHTML=renderTrainTab();}
 let drillSteps=[];
 function openDrillBuilder(){
   drillSteps=[{name:'',dur:30,rest:10}];
@@ -2899,28 +3018,66 @@ async function sendCoachChat(){
 /* ---------- SPARRING BREAKDOWN ---------- */
 let sparResult='',sparBusy=false;
 function aiSparView(){
+  const logs=S.sparLogs||[];
+  const totalRounds=logs.reduce((a,l)=>a+(+l.rounds||0),0);
+  const monthAgo=Date.now()-30*864e5;
+  const thisMonth=logs.filter(l=>new Date(l.date).getTime()>=monthAgo).length;
   return`<div class="grid" style="grid-template-columns:1fr 1fr;align-items:start">
     <div class="card">
-      <div class="fw6 mb">Describe the session</div>
-      <label class="field"><span>Session notes</span><textarea class="inp" id="sparNotes" style="min-height:140px" placeholder="What happened? How did the rounds go? What did you notice about yourself?"></textarea></label>
+      <div class="fw6 mb">Log a sparring session</div>
+      <div class="grid g2 keep">
+        <label class="field" style="margin:0 0 10px"><span>Date</span><input class="inp" type="date" id="sparDate" value="${new Date().toISOString().slice(0,10)}"></label>
+        <label class="field" style="margin:0 0 10px"><span>Rounds</span><input class="inp" type="number" min="0" max="30" id="sparRounds" placeholder="5"></label>
+      </div>
+      <label class="field"><span>Partners (optional)</span><input class="inp" id="sparPartners" placeholder="Who did you spar?"></label>
+      <label class="field"><span>What worked</span><textarea class="inp" id="sparWorked" style="min-height:60px" placeholder="Shots that landed, positions you controlled…"></textarea></label>
+      <label class="field"><span>What didn't</span><textarea class="inp" id="sparNotes" style="min-height:80px" placeholder="Where you struggled, what got you hit, what gassed you…"></textarea></label>
       <label class="field"><span>Opponent tendencies (optional)</span><textarea class="inp" id="sparOpp" placeholder="What were they doing? What gave you trouble?"></textarea></label>
-      <button class="btn block" onclick="runSparBreakdown()" ${sparBusy?'disabled':''}>${sparBusy?'Analysing…':'Break It Down'}</button>
+      <button class="btn block" onclick="runSparBreakdown()" ${sparBusy?'disabled':''}>${sparBusy?'Analysing…':'Break It Down & Log'}</button>
     </div>
-    <div class="card" style="min-height:200px">
-      <div class="fw6 mb">Coach's Breakdown</div>
-      ${sparBusy?'<div class="empty"><span class="typing"><i></i><i></i><i></i></span></div>':
-        sparResult?`<div style="line-height:1.6">${md(sparResult)}</div>`:'<p class="muted fz12">Your structured breakdown — patterns, exploitable habits, fixes, and a strength to reinforce — appears here.</p>'}
+    <div>
+      <div class="card mb" style="min-height:160px">
+        <div class="fw6 mb">Coach's Breakdown</div>
+        ${sparBusy?'<div class="empty"><span class="typing"><i></i><i></i><i></i></span></div>':
+          sparResult?`<div style="line-height:1.6">${md(sparResult)}</div>`:'<p class="muted fz12">Log a session and your structured breakdown — patterns, exploitable habits, fixes, and a strength to reinforce — appears here and is saved to your history.</p>'}
+      </div>
+      ${logs.length?`<div class="card">
+        <div class="between mb"><div class="fw6">Sparring History</div><span class="pill gold sm">${logs.length} logged</span></div>
+        <div class="grid g3 keep mb">
+          <div class="stat-box"><div class="k">Sessions</div><div class="v gold">${logs.length}</div></div>
+          <div class="stat-box"><div class="k">Total Rounds</div><div class="v">${totalRounds}</div></div>
+          <div class="stat-box"><div class="k">Last 30d</div><div class="v">${thisMonth}</div></div>
+        </div>
+        ${logs.slice(0,8).map(sparLogCard).join('')}
+      </div>`:''}
     </div></div>`;
 }
+function sparLogCard(l){
+  return`<div class="card mb" style="padding:12px">
+    <div class="between"><div class="row" style="gap:8px"><span class="mono fz12 gold">${fmtDate(l.date)}</span>${l.rounds?`<span class="pill sm">${esc(String(l.rounds))} rds</span>`:''}</div>
+      <button class="x-btn" onclick="delSparLog('${l.id}')">✕</button></div>
+    ${l.partners?`<div class="fz12 mt"><span class="muted">Partners:</span> ${esc(l.partners)}</div>`:''}
+    ${l.worked?`<div class="fz12 mt"><span class="muted">Worked:</span> ${esc(l.worked)}</div>`:''}
+    ${l.notes?`<div class="fz12 mt"><span class="muted">Struggled:</span> ${esc(l.notes)}</div>`:''}
+    ${l.analysis?`<details class="mt"><summary class="fz12 gold" style="cursor:pointer">Coach's breakdown</summary><div class="fz12 mt" style="line-height:1.6">${md(l.analysis)}</div></details>`:''}
+  </div>`;
+}
+function delSparLog(id){S.sparLogs=(S.sparLogs||[]).filter(l=>l.id!==id);saveNow();rerenderAICoach();}
 async function runSparBreakdown(){
-  const notes=$('#sparNotes').value.trim();if(!notes){toast('Describe the session first','red');return;}
+  const g=id=>{const e=$('#'+id);return e?e.value.trim():'';};
+  const notes=g('sparNotes'),worked=g('sparWorked');
+  if(!notes&&!worked){toast('Add what worked or struggled with first','red');return;}
   /* coach runs on-device — no key required */
-  const opp=$('#sparOpp').value.trim();
+  const opp=g('sparOpp'),partners=g('sparPartners'),rounds=g('sparRounds'),date=g('sparDate')||new Date().toISOString().slice(0,10);
   sparBusy=true;rerenderAICoach();
   const system=`You are analyzing a fighter's sparring session. ${profileContext()} Identify: (1) patterns in their behavior, (2) habits that opponents will exploit, (3) exactly 3 specific things to fix this week, (4) 1 strength to reinforce. Format as structured markdown with clear headers (## ). Be direct and technical.`;
-  const content=`Sparring session notes:\n${notes}${opp?`\n\nOpponent tendencies:\n${opp}`:''}`;
+  const content=`Sparring session — ${rounds?rounds+' rounds. ':''}${partners?'Partners: '+partners+'. ':''}\nWhat worked:\n${worked||'(not specified)'}\n\nWhat didn't / struggled with:\n${notes||'(not specified)'}${opp?`\n\nOpponent tendencies:\n${opp}`:''}`;
   try{sparResult=await callClaude([{role:'user',content}],system,1000);}
   catch(e){sparResult='⚠️ '+e.message;}
+  // persist the session to history (analysis saved only if it succeeded)
+  S.sparLogs=S.sparLogs||[];
+  S.sparLogs.unshift({id:uid(),date,rounds:rounds?+rounds:'',partners,worked,notes,opp,analysis:/^⚠️/.test(sparResult)?'':sparResult});
+  saveNow();logActivity('training',`Logged a sparring session${rounds?` (${rounds} rds)`:''}`);
   sparBusy=false;rerenderAICoach();
 }
 
@@ -5611,16 +5768,75 @@ function saveProfile(){
 }
 function setPrefs(){
   const s=S.settings;
+  const r=S.reminders||(S.reminders={enabled:false,time:'18:00',days:[1,2,3,4,5],lastFired:''});
+  const dayLabels=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const permState=(typeof Notification!=='undefined')?Notification.permission:'unsupported';
   return `<div class="card" style="max-width:560px">
     <label class="lbl">Units</label>
     <div class="seg">${['metric','imperial'].map(u=>`<button class="seg-btn ${s.units===u?'on':''}" onclick="setUnits('${u}')">${u==='metric'?'Metric (kg/cm)':'Imperial (lbs/in)'}</button>`).join('')}</div>
     <label class="lbl mt">Theme</label>
     <div class="seg">${[['dark','Void'],['darker','Blackout'],['red','Blood']].map(([t,l])=>`<button class="seg-btn ${s.theme===t?'on':''}" onclick="setThemePref('${t}')">${l}</button>`).join('')}</div>
     <p class="fz11 muted mt">Theme tints the accent and background mood across the app.</p>
+  </div>
+  <div class="card mt" style="max-width:560px">
+    <div class="between mb"><div class="fw6">Training Reminders</div>
+      <button class="seg-btn ${r.enabled?'on':''}" onclick="toggleReminders()">${r.enabled?'On':'Off'}</button></div>
+    <p class="fz11 muted mb">A daily nudge to get your work in. Reminders fire on this device while OCTAGON is installed or open in a tab.${permState==='denied'?' <span style="color:var(--red)">Notifications are blocked in your browser settings — re-enable them to receive reminders.</span>':''}</p>
+    ${r.enabled?`<label class="field"><span>Time</span><input class="inp" type="time" value="${r.time}" onchange="setReminderTime(this.value)"></label>
+    <label class="lbl">Days</label>
+    <div class="chip-row mb">${dayLabels.map((d,i)=>`<span class="chip ${r.days.indexOf(i)>=0?'on':''}" onclick="toggleReminderDay(${i})">${d}</span>`).join('')}</div>
+    <button class="btn ghost sm" onclick="testReminderNow()">Send a test reminder</button>`:''}
   </div>`;
 }
 function setUnits(u){S.settings.units=u;save();refreshTopbar();toast('Units: '+u);go('settings');}
 function setThemePref(t){S.settings.theme=t;save();applyTheme();toast('Theme applied');go('settings');}
+/* ---------- Training reminders (local notifications) ---------- */
+async function toggleReminders(){
+  const r=S.reminders;
+  if(!r.enabled){
+    if(typeof Notification==='undefined'){toast('Notifications not supported on this device','red');return;}
+    let perm=Notification.permission;
+    if(perm==='default'){try{perm=await Notification.requestPermission();}catch(e){}}
+    if(perm!=='granted'){toast('Allow notifications to enable reminders','red');go('settings');return;}
+    r.enabled=true;saveNow();toast('Reminders on','green');scheduleReminderCheck();
+  }else{r.enabled=false;saveNow();toast('Reminders off');}
+  go('settings');
+}
+function setReminderTime(v){S.reminders.time=v||'18:00';saveNow();toast('Reminder time set');}
+function toggleReminderDay(i){const d=S.reminders.days;const k=d.indexOf(i);if(k>=0)d.splice(k,1);else d.push(i);saveNow();if(currentRoute==='settings')go('settings');}
+function fireReminder(){
+  const body='Time to get your work in. Log a session, drill, or watch some film.';
+  try{
+    if(navigator.serviceWorker&&navigator.serviceWorker.ready){
+      navigator.serviceWorker.ready.then(reg=>reg.showNotification('OCTAGON — Training time 🥊',{body,tag:'octagon-train',badge:undefined})).catch(()=>new Notification('OCTAGON — Training time 🥊',{body}));
+    }else if(typeof Notification!=='undefined'&&Notification.permission==='granted'){
+      new Notification('OCTAGON — Training time 🥊',{body});
+    }
+  }catch(e){}
+}
+function testReminderNow(){
+  if(typeof Notification==='undefined'||Notification.permission!=='granted'){toast('Enable reminders first','red');return;}
+  fireReminder();toast('Test reminder sent','green');
+}
+let _reminderTimer=null;
+function scheduleReminderCheck(){
+  if(_reminderTimer)return; // single interval for the session
+  _reminderTimer=setInterval(checkReminderDue,60000);
+  checkReminderDue();
+}
+function checkReminderDue(){
+  const r=S.reminders;if(!r||!r.enabled)return;
+  if(typeof Notification==='undefined'||Notification.permission!=='granted')return;
+  const now=new Date();
+  if((r.days||[]).indexOf(now.getDay())<0)return;
+  const [hh,mm]=(r.time||'18:00').split(':').map(Number);
+  const todayKey=now.toISOString().slice(0,10);
+  if(r.lastFired===todayKey)return; // already fired today
+  // fire if we're at/after the scheduled minute (within the day)
+  if(now.getHours()>hh||(now.getHours()===hh&&now.getMinutes()>=mm)){
+    fireReminder();r.lastFired=todayKey;saveNow();
+  }
+}
 async function testAIConnection(){
   const out=$('#aiTestOut');if(out)out.innerHTML='<div class="muted fz12">Testing…</div>';
   try{
@@ -6281,6 +6497,7 @@ function boot(){
     }
   }
   _safe(resolveAuth,'resolveAuth');
+  _safe(()=>{if(S.reminders&&S.reminders.enabled)scheduleReminderCheck();},'reminders');
 }
 // Global guard: surface unexpected errors instead of dying silently.
 window.addEventListener('error',function(ev){try{console.warn('[octagon] runtime error:',ev.message);}catch(_){}});
