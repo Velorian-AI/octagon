@@ -4466,16 +4466,569 @@ function demoTech(it){
   if(it&&it.tech) return it.tech;
   return (it&&DEMO_FALLBACK[it.n])||'pivot';
 }
+const PROCLIPS_VER=2; // bump to refresh the bundled pro-breakdown library on existing installs
+function _yt(q){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);}
 function seedProClips(){
   const d=[
-    ['Israel Adesanya','Range striking & the long jab','Striking','How Izzy uses distance management, the in-and-out lead, and feints to bait reactions before landing the straight.','https://www.youtube.com/results?search_query=israel+adesanya+striking+breakdown'],
-    ['Khabib Nurmagomedov','Chain wrestling & top pressure','Wrestling','The relentless level changes, mat returns, and the leg-drag to mount that smothered every opponent.','https://www.youtube.com/results?search_query=khabib+wrestling+breakdown'],
-    ['Gordon Ryan','Body-lock passing system','BJJ','Pressure passing, the body-lock pass and back exposure that makes Gordon nearly unstoppable on top.','https://www.youtube.com/results?search_query=gordon+ryan+passing+system'],
-    ['Saenchai','Lead-leg teep & feint game','Muay Thai','Elite footwork, the cartwheel/feint setups, and the lead-leg teep that controls the entire ring.','https://www.youtube.com/results?search_query=saenchai+technique+breakdown'],
-    ['Demetrious Johnson','Seamless MMA transitions','MMA','Flowing striking-to-grappling chains, the suplex-to-armbar, and how DJ links everything together.','https://www.youtube.com/results?search_query=demetrious+johnson+breakdown'],
-    ['Vasyl Lomachenko','Angles & foot placement','Boxing','The pivot-step to the blind angle, matrix footwork, and how Loma makes opponents face the wrong way.','https://www.youtube.com/results?search_query=lomachenko+footwork+breakdown']
+  {fighter:'Israel Adesanya',nick:'The Last Stylebender',tag:'Striking',title:'Range striking & the long jab',
+   record:'24-4 (MMA) · 75-5 (kickboxing)',stance:'Switch (orthodox/southpaw)',division:'Middleweight',era:'2018–present',
+   desc:`Adesanya fights at the very end of his range, where he can touch you but you can't touch him. He turns the cage into a measuring tape — every step in is taxed, every reaction is logged and later punished.`,
+   signature:`The whip-back lead straight off a hand feint — he freezes you with the lead hand, then the rear (or in southpaw, the lead) snaps down the centre before you re-engage.`,
+   keys:[`Long, rangy stance with most weight on a loaded rear leg — he can fire the back hand without telegraphing a weight shift.`,
+     `Constant hand and shoulder feints map your defensive reactions; he is gathering data, not attacking randomly.`,
+     `Snipes the lead leg and body early to slow your footwork, then elevates to the head once you stop moving.`,
+     `Recovers behind a long guard and immediately re-establishes distance — he is rarely there to be hit back.`],
+   setup:`He spends rounds 1–2 measuring: a jab to your glove, a feint to draw the parry, a low kick to read your weight. By the championship rounds he knows exactly which reaction to bait, and the finish looks 'sudden' only because he front-loaded the homework.`,
+   why:`Distance is the cheapest defence in the sport — if you're an inch out of range, you don't need to block. By owning the outer edge he forces opponents to lunge, and a lunging opponent is off-balance, predictable and open down the middle.`,
+   counter:`Pressure fighters who walk through the early kicks and force exchanges in the pocket (where his frame is a liability) give him trouble — and elite wrestlers shrink the cage and take the striking math off the table entirely.`,
+   drill:[`Shadowbox an entire round throwing nothing but feints and half-jabs — train the habit of measuring before committing.`,
+     `On the bag, fire the rear straight only after a visible lead-hand feint; the feint must come first, every rep.`,
+     `Partner drill: stand at the edge of your reach and practise touching their lead glove, then resetting out — own the boundary.`],
+   iq:`Patience is a weapon. Adesanya wins rounds he 'lost' on volume because the few shots he lands are the meaningful ones, and he never trades his structure for activity.`,
+   stat:`Landed at a high clip while absorbing among the lowest significant strikes per minute of any champion in his era.`,
+   url:_yt('israel adesanya striking breakdown')},
+
+  {fighter:'Anderson Silva',nick:'The Spider',tag:'Striking',title:'Counter striking & the matrix',
+   record:'34-11 (MMA)',stance:'Southpaw',division:'Middleweight',era:'2006–2013 (UFC peak)',
+   desc:`The greatest counter striker MMA has produced. Silva makes you miss by inches — hands down, chin pulled just off-line — and answers in the same beat, so your attack becomes the setup for his.`,
+   signature:`The lean-back slip into the rear straight: he pulls his head off your jab, you over-commit, and the counter is already travelling before your hand comes back.`,
+   keys:[`Relaxed, almost loose posture — looseness is speed; tension is slow. He stays soft until the instant of contact.`,
+     `Reads rhythm and tempo, not individual punches — he feels when you're about to throw and answers the pattern.`,
+     `Pinpoint accuracy: he targets the chin and floating ribs, not 'the head' — small targets, full commitment.`,
+     `Clinch knees and elbows the instant you crowd him to escape his counters.`],
+   setup:`Silva bait-and-counters: he leaves a deliberate opening (a low lead hand, a still head) so you throw at it, then he isn't there and you are. The 'opening' is the trap.`,
+   why:`A countering fighter borrows his opponent's commitment — you supply the forward momentum, he supplies the timing, and the two collide on your chin. It's the highest-percentage way to land clean against an aggressive opponent.`,
+   counter:`Feinting fighters who refuse to commit starve his counters; relentless wrestling (as Chael Sonnen showed) drags him to a phase where reading rhythm doesn't save you.`,
+   drill:[`Partner throws a slow jab; practise the pull-counter — slip back just past the punch, return the straight before they reset.`,
+     `Shadowbox staying deliberately loose; only tense on the imaginary moment of impact.`,
+     `Reaction drill: have a partner throw on an unpredictable beat and answer the *second* strike, training pattern reads over single shots.`],
+   iq:`Silva proved that defence is offence — making someone miss badly is itself an attack, because it destroys their confidence and their balance at once.`,
+   stat:`Holds one of the longest title-win streaks in UFC history, much of it built on counters rather than initiated offence.`,
+   url:_yt('anderson silva counter striking breakdown')},
+
+  {fighter:'Jon Jones',nick:'Bones',tag:'MMA',title:'Range control, oblique kicks & fight IQ',
+   record:'28-1 (1 NC)',stance:'Orthodox/switch',division:'Light Heavyweight / Heavyweight',era:'2011–present',
+   desc:`Jones weaponises length better than anyone in MMA history. Long-guard frames, side kicks to the knee, spinning elbows and a wrestling base he can deploy at will — he fights a different, longer fight than his opponents are trained for.`,
+   signature:`The oblique (side) kick to the lead knee — it stops forward pressure cold, damages the joint over a fight, and keeps you pinned at the end of his enormous reach.`,
+   keys:[`Uses his reach advantage with a long lead-hand frame in the opponent's face to deny entry.`,
+     `Oblique kicks and side kicks attack the knee and thigh to dismantle footwork and pressure.`,
+     `Mixes 8 points of contact — elbows, spinning attacks, knees in the clinch — so there's no single read.`,
+     `Wrestling threat is always live; the strike fear opens the takedown and vice-versa.`],
+   setup:`He stifles your pressure with the oblique kick and stiff-arm frame, banks damage on the lead leg, then once you hesitate to step in he closes to elbows or changes levels for the takedown. Every option sets up the next.`,
+   why:`Controlling range plus controlling where the fight happens (standing vs. ground) means the opponent never gets to fight their fight. Jones removes options until only his are left.`,
+   counter:`He has historically been most tested early by explosive pressure and feints before he settles in and starts solving the puzzle; the oblique-kick-heavy style is also physically punishing to throw for five rounds.`,
+   drill:[`Drill the side/oblique kick as a stop-hit: as your partner steps in, extend the kick to the lead thigh/knee to halt them.`,
+     `Practise the long-guard frame — stiff lead arm to the forehead — to control distance in the clinch.`,
+     `Flow between a strike entry and a level change on the same step so the takedown hides inside the striking.`],
+   iq:`Jones rarely fights the same way twice — he game-plans the specific opponent and is willing to win ugly. Adaptability over a signature look is itself the signature.`,
+   stat:`Won UFC light-heavyweight title at 23 and went undefeated across the division for over a decade.`,
+   url:_yt('jon jones fight iq breakdown')},
+
+  {fighter:'Conor McGregor',nick:'The Notorious',tag:'Striking',title:'The southpaw left & distance timing',
+   record:'22-6 (MMA)',stance:'Southpaw',division:'Featherweight / Lightweight',era:'2013–2018 (peak)',
+   desc:`At his peak, McGregor's left straight was the most feared single shot in MMA. His genius was timing — he threw it as opponents stepped in, turning their own forward motion into the power source.`,
+   signature:`The pull-counter left straight: hands carried low, head slightly back, he draws the lead, leans just off it and fires the rear hand down the open southpaw-vs-orthodox centreline.`,
+   keys:[`Southpaw stance gives a clear lane for the rear straight against orthodox fighters — outside foot position is everything.`,
+     `Fights with hands low to bait and to relax the shoulders for a faster, longer left.`,
+     `Times the shot on the opponent's step-in, not on his own initiation — borrowed momentum.`,
+     `Front-kick and side-kick to the body manage distance and keep the lead lane clear.`],
+   setup:`He establishes the threat of the left early so opponents become tentative; that hesitation is when he steps the lead foot outside and lands the counter as they reach. He sells distance as safe, then collapses it.`,
+   why:`The straight rear hand travels the shortest path to the chin, and thrown as a counter it lands before the opponent's guard returns. Against an orthodox fighter, the southpaw angle keeps it on a lane they can't easily parry.`,
+   counter:`Leg kicks to the lead leg erode the stance the left is built on; a high pace into deep waters historically dropped his output, and wrestlers who weather round one change the math.`,
+   drill:[`Drill the outside-foot battle: against an orthodox partner, win lead-foot-outside position before throwing.`,
+     `Pull-counter reps: partner jabs, you lean off the line and answer with the rear straight in the same beat.`,
+     `Shadowbox carrying the rear hand 'loaded' so the left is always a half-beat from launching.`],
+   iq:`McGregor showed that one elite, deeply-trusted weapon — set up with feints, timing and a believable threat — can define an entire division if the opponent has to respect it every second.`,
+   stat:`First fighter to hold two UFC titles simultaneously; many of his finishes traced back to the same left hand.`,
+   url:_yt('conor mcgregor left hand breakdown')},
+
+  {fighter:'Max Holloway',nick:'Blessed',tag:'Striking',title:'Volume boxing & pocket pressure',
+   record:'26-8 (MMA)',stance:'Orthodox',division:'Featherweight',era:'2016–present',
+   desc:`Holloway drowns opponents in volume and rhythm. He plants in the pocket, talks to you, and throws long, accurate combinations that compound round over round until the dam breaks.`,
+   signature:`The relentless 3-to-6-punch combinations thrown while standing in range — he's comfortable being hit to land three back, and the math always favours him.`,
+   keys:[`High output with real accuracy — not arm-punches; he turns the shots over with the hips.`,
+     `Stays in a stable, square-ish stance that lets him punch in long strings without resetting.`,
+     `Mixes levels — body, body, head — to lower the guard before the head shots land.`,
+     `Excellent chin and recovery let him fight in the pocket where his volume wins exchanges.`],
+   setup:`He uses early rounds to establish rhythm and read your timing, then increases pace as you fatigue. The pressure is cumulative — he wants the later rounds, where his cardio and volume break you.`,
+   why:`Volume plus accuracy is a numbers game: if you both land but he lands twice as often, he wins every exchange on points and eventually on damage. Sustained pressure also drains the opponent's legs, shrinking their defence.`,
+   counter:`Elite movement and range strikers (peak Volkanovski) who refuse the pocket and pot-shot on the way out can out-point him; his hittable, stand-and-bang style means he does take damage.`,
+   drill:[`Bag rounds with a minimum-punch rule per combination (3+) to build the habit of stringing shots.`,
+     `Body-head level-change combos: two to the body, then up top, every set.`,
+     `Cardio-volume rounds — keep a high, steady output for the full round to train pocket endurance.`],
+   iq:`Holloway proved that conditioning is a skill: if you can throw clean combinations in round five the way you did in round one, you don't need a one-shot weapon — you are the pressure.`,
+   stat:`Holds the UFC record for significant strikes landed, built almost entirely on volume in the pocket.`,
+   url:_yt('max holloway volume boxing breakdown')},
+
+  {fighter:'José Aldo',nick:'Junior',tag:'Muay Thai',title:'Leg kicks & takedown defence',
+   record:'31-8 (MMA)',stance:'Orthodox',division:'Featherweight',era:'2009–2015 (peak)',
+   desc:`Aldo's low kicks were so damaging they ended fights and careers, and his takedown defence let him stay standing to throw them. A complete Muay Thai base bolted onto elite MMA timing.`,
+   signature:`The chopping low kick to the outside of the thigh — full hip rotation, shin turned over, thrown in volume until the opponent's lead leg stops working.`,
+   keys:[`Rotates the whole hip and turns the shin over the target — it's a baseball-bat swing, not a flick.`,
+     `Disguises the kick behind hand feints and punches so it lands clean and unchecked.`,
+     `Elite takedown defence (sprawl, underhooks, hip control) keeps the fight where his kicks rule.`,
+     `Explosive, short bursts conserve energy between phases of damage.`],
+   setup:`He threatens the hands to draw the guard up and the weight forward, then takes the lead leg out from under a distracted opponent. Once the leg is compromised, everything else opens.`,
+   why:`Leg kicks attack the foundation — a damaged lead leg destroys footwork, power and the ability to shoot a takedown. It's cumulative damage the opponent can't fully defend without surrendering their offence.`,
+   counter:`Checking the kicks turns the damage back on the kicker; a relentless pace into the later rounds historically lowered his volume, and pressure that forces him backward limits the hip turn his kicks need.`,
+   drill:[`Bag work: throw the low kick with full hip rotation and turn the shin over — quality of rotation over quantity.`,
+     `Set up the kick behind a jab-cross so the legs are never the first thing you show.`,
+     `Sprawl-and-return drill: defend a shot, then immediately fire the low kick as they stand back up.`],
+   iq:`Aldo showed that you win by making the opponent's body fail before their will does — take the legs and you've taken the fight, no highlight knockout required.`,
+   stat:`Reigned as featherweight champion (WEC + UFC) for roughly seven years, largely on the back of leg kicks and takedown defence.`,
+   url:_yt('jose aldo leg kicks breakdown')},
+
+  {fighter:'Vasyl Lomachenko',nick:'Hi-Tech',tag:'Boxing',title:'Angles & foot placement',
+   record:'17-3 (boxing) · 396-1 (amateur)',stance:'Southpaw',division:'Lightweight (boxing)',era:'2014–present',
+   desc:`Lomachenko's footwork is a science. He steps to the blind angle so consistently that opponents spend the fight turning to find a man who's already hitting them — boxing as a geometry problem.`,
+   signature:`The pivot-step to the lead-foot-outside angle: he plants outside your lead foot, you're now square to him while he's at 45 degrees, and you literally cannot defend the lane he's punching down.`,
+   keys:[`Constant small foot adjustments to win outside-foot position before he punches.`,
+     `Pivots after combinations to a new angle instead of resetting straight back — he never leaves the way he came.`,
+     `Body attack to pin the opponent's feet, then steps off to the angle they can't follow.`,
+     `Layered feints (hands, head, feet) freeze the opponent's feet so he can step around them.`],
+   setup:`He attacks the body to root your feet in place, then pivots to your blind side while you're stuck. By the time you re-square, he's landed and moved again — you're always a half-step behind the geometry.`,
+   why:`If you can stand where your opponent can hit but can't be hit (off their centreline, outside their lead foot), you win every exchange for free. Angles convert equal exchanges into one-sided ones.`,
+   counter:`Bigger, stronger fighters who can physically hold the centre and out-muscle the foot battle (as a couple of larger opponents managed) blunt the angle game; pure punchers who land in the brief moment he resets can interrupt the dance.`,
+   drill:[`Pivot-after-combo drill: every combination ends with a pivot step to a new angle, never a straight retreat.`,
+     `Outside-foot game vs. a partner — score a point only when you land from outside their lead foot.`,
+     `Body-then-angle: dig to the body to pin them, immediately step off-line and fire from the new angle.`],
+   iq:`Lomachenko makes opponents quit by erasing their offence entirely — when you can't even find your man to hit him, the fight breaks your spirit before your body.`,
+   stat:`Won world titles in three weight classes in only his seventh, twelfth and thirteenth-ish pro fights — among the fastest ever.`,
+   url:_yt('lomachenko footwork angles breakdown')},
+
+  {fighter:'Floyd Mayweather',nick:'Money',tag:'Boxing',title:'Shoulder roll & defensive mastery',
+   record:'50-0 (boxing)',stance:'Orthodox',division:'Welterweight (multi)',era:'1996–2017',
+   desc:`The most refined defensive boxer of his generation. The Philly-shell shoulder roll let Mayweather make world-class punchers miss all night, then counter with a perfect, economical right hand.`,
+   signature:`The shoulder-roll into the check-hook / rear-cross counter: lead shoulder up deflects the cross, right hand parries the jab, and the return fires through the gap the opponent just opened.`,
+   keys:[`Lead shoulder raised to deflect the rear hand; rear glove guards the chin; lead arm protects the body.`,
+     `Rolls with shots rather than blocking flush — he takes the angle off the punch so it slides by.`,
+     `Counters with the short rear cross and the check hook the instant the opponent commits.`,
+     `Ring generalship and pace control — he dictates tempo so exchanges happen on his terms.`],
+   setup:`He invites you to lead (the shell looks open), absorbs or deflects it, and answers in the gap. The defence is the bait — every punch you throw at the shell is a punch he's already planning to counter.`,
+   why:`A fighter who can't be hit cleanly can't lose on damage, and a perfect counter off a deflection lands while the opponent is fully committed and defensively open. Low risk, high return, sustained for twelve rounds.`,
+   counter:`Sustained body pressure and high volume (the shell defends the head better than the body) is the classic blueprint; awkward, unpredictable rhythm bothers a fighter who reads patterns.`,
+   drill:[`Shell-and-roll drill: partner throws the cross, you raise the lead shoulder and roll so it slides off.`,
+     `Counter off the roll — after deflecting, fire the short rear hand immediately into the gap.`,
+     `Tempo rounds: practise speeding up and slowing the pace deliberately to own the fight's rhythm.`],
+   iq:`Mayweather treated boxing as risk management — minimise what you take, guarantee a clean counter, and let the rounds bank. Unbeaten over fifty fights is a defensive philosophy, not luck.`,
+   stat:`Retired 50-0 across five weight classes, repeatedly out-boxing bigger punchers without absorbing damage.`,
+   url:_yt('mayweather shoulder roll defense breakdown')},
+
+  {fighter:'Mike Tyson',nick:'Iron Mike',tag:'Boxing',title:'Peek-a-boo & explosive entries',
+   record:'50-6 (boxing)',stance:'Orthodox',division:'Heavyweight',era:'1985–1990 (peak)',
+   desc:`Peak Tyson combined head movement, hand speed and terrifying power in a short heavyweight frame. He slipped into range behind constant upper-body movement and detonated hooks and uppercuts from angles bigger men couldn't see coming.`,
+   signature:`The slip-to-uppercut/hook in the pocket: he weaves under the jab, loads the rear leg, and comes up with the short uppercut or rips the lead hook to the body and head in one motion.`,
+   keys:[`Constant head movement on the entry — he closes distance while making himself hard to hit.`,
+     `Stays low and coiled so every slip loads a leg for a power shot.`,
+     `Throws short, fast hooks and uppercuts from the pocket where his lack of height becomes an advantage.`,
+     `Bobs to the body then up to the head — the level change blinds the guard.`],
+   setup:`He uses lateral and downward head movement to get past the longer reach of heavyweights, then unloads the instant he's inside. The whole game is built on safely crossing the gap, because once he's in, the power decides it.`,
+   why:`A shorter fighter who can get inside without being hit on the way in nullifies reach and lands power from angles taller fighters aren't structured to defend. Head movement is the toll for entering; the power is the payoff.`,
+   counter:`A long, busy jab and lateral movement that won't let him set his feet (the blueprint that troubled him later) keep him outside, where his height is a disadvantage and his entries stall.`,
+   drill:[`Slip-line drill: weave under a rope or partner's jab and come up loading the rear leg for the uppercut.`,
+     `Body-head hook combos from a low stance — short, turned-over, not reaching.`,
+     `Entry practice: cross distance behind two head movements before throwing, so you never enter square and still.`],
+   iq:`Tyson showed that aggression works when it's organised — the menace was real, but the head movement and angles underneath it were textbook, not wild.`,
+   stat:`Became the youngest heavyweight champion in history at 20, finishing most early opponents inside the distance.`,
+   url:_yt('mike tyson peek a boo head movement breakdown')},
+
+  {fighter:'Canelo Álvarez',nick:'Canelo',tag:'Boxing',title:'Body punching & counter hooks',
+   record:'62-2-2 (boxing)',stance:'Orthodox',division:'Super Middleweight (multi)',era:'2011–present',
+   desc:`Canelo blends elite defence with the best body attack in boxing. He slips, rolls and counters like a defensive specialist, then invests in the body until opponents fold late.`,
+   signature:`The slip-into-left-hook-to-the-body: he rolls under the cross and digs the hook to the liver/floating ribs, a shot that pays off three rounds later when the opponent's legs and breathing go.`,
+   keys:[`Excellent upper-body defence — he rolls and slips in the pocket without giving up his position.`,
+     `Relentless, accurate body investment that compounds over the fight.`,
+     `Counter hooks and the short right hand off defensive movement.`,
+     `Patient, measured pressure — he walks you down without lunging.`],
+   setup:`He banks body shots early when you're fresh and don't feel them, then collects the debt in the championship rounds as your guard drops and your output falls. The early body work looks unremarkable until it isn't.`,
+   why:`Body shots are an investment with delayed, irreversible returns — you can't 'recover' a fatigued body the way you shake off a head shot. Pair that with defence that keeps him fresh, and the late-fight gap only widens.`,
+   counter:`Movement and a long jab from a skilled boxer who refuses to plant in front of him (as a couple of slick opponents managed) denies the counters; sheer size has occasionally out-physicaled him.`,
+   drill:[`Roll-and-rip: slip the cross, immediately dig the lead hook to the body, then reset.`,
+     `Body-investment rounds — target the liver and floating ribs with turned-over hooks, not slaps.`,
+     `Patience walk-down drill: pressure a moving partner without lunging, cutting the ring instead.`],
+   iq:`Canelo embodies fighting smart over fighting hard — defence keeps him fresh, body work breaks the other man, and the scorecards take care of themselves.`,
+   stat:`Became undisputed super-middleweight champion, unifying all four belts in the division.`,
+   url:_yt('canelo body punching defense breakdown')},
+
+  {fighter:'Muhammad Ali',nick:'The Greatest',tag:'Boxing',title:'Footwork, jab & ring generalship',
+   record:'56-5 (boxing)',stance:'Orthodox',division:'Heavyweight',era:'1964–1974 (peak)',
+   desc:`Ali fought like a much smaller man in a heavyweight body — on his toes, circling, flicking a fast jab and refusing to be cornered. He redefined what mobility and rhythm could do at the top weight.`,
+   signature:`The stick-and-move jab on the retreat: he pumps the long, fast jab while gliding backward and laterally, scoring and resetting before the opponent can plant to counter.`,
+   keys:[`Lives on his toes with constant lateral movement — he's a moving target all night.`,
+     `Fast, long jab used to score and to keep range, not just to set up power.`,
+     `Pulls straight back off shots (unorthodox, but his reflexes made it work) to stay out of range.`,
+     `Controls the ring — dictates where the fight happens and never lets himself get pinned.`],
+   setup:`He uses movement and the jab to bank rounds and frustrate punchers, making them chase and miss until they tire. When he chose to, he'd plant and let combinations go against an exhausted opponent.`,
+   why:`A mobile fighter who controls range turns a power-puncher's fight into an endurance test the puncher can't win — you can't knock out what you can't catch, and chasing burns the legs that power needs.`,
+   counter:`A cutting-off-the-ring pressure fighter with a great hook (Joe Frazier's blueprint) who closes the space and bangs the body forces Ali to plant and trade, neutralising the movement.`,
+   drill:[`Movement rounds: circle and pump the jab while never standing still — score and glide.`,
+     `Ring-cutting awareness — practise recognising and stepping out of corners before you're trapped.`,
+     `Long-jab accuracy on the move: land the jab while stepping back and laterally.`],
+   iq:`Ali understood the fight beyond the punches — pace, geography and psychology. He'd lose exchanges on purpose to win the war, and he made opponents fight his fight.`,
+   stat:`Won the heavyweight title three separate times across a career that spanned eras and styles.`,
+   url:_yt('muhammad ali footwork jab breakdown')},
+
+  {fighter:'Saenchai',nick:'',tag:'Muay Thai',title:'Lead-leg teep & feint game',
+   record:'300+ wins (Muay Thai)',stance:'Orthodox/switch',division:'Lightweight (Muay Thai)',era:'1990s–present',
+   desc:`Saenchai is Muay Thai's great artist — footwork, feints and a lead-leg teep that controls the entire ring. He makes elite opponents look amateur with timing and creativity, not size.`,
+   signature:`The lead-leg teep (push kick) to the body and hip — a long, stiff jab with the foot that stops pressure, steals rhythm and resets distance whenever he wants.`,
+   keys:[`Uses the teep like a jab — to measure, to interrupt, and to keep opponents at the end of his range.`,
+     `Endless feints (cartwheel kicks, switch steps, hand traps) that freeze opponents and hide the real attack.`,
+     `Switches stance fluidly to attack from new angles and confuse the read.`,
+     `Superb balance — he can pull the teep back and re-chamber without ever being off-balance.`],
+   setup:`He floods you with feints until you stop reacting to any of them, then the real strike lands clean. The teep keeps you at range while he sets the trap, and the creativity makes you defend everything, so you defend nothing well.`,
+   why:`The lead teep is the longest, safest tool in Muay Thai — it controls distance with almost no risk and disrupts any forward rhythm. Built on feints, it makes the opponent hesitant, and a hesitant opponent is a slow one.`,
+   counter:`Heavy, walk-through pressure from a bigger fighter who eats the teep and crowds the clinch can rob him of the space his game needs — size and weight are the equalisers his artistry can't always solve.`,
+   drill:[`Teep-as-jab rounds: use the lead-leg push kick to control a partner's distance the way a jab would.`,
+     `Feint-then-strike: show two fakes before every real attack to train the bait-first habit.`,
+     `Balance drill: throw the teep and re-chamber to a stable stance without putting the foot down.`],
+   iq:`Saenchai proves that control of distance and rhythm beats power — if the opponent never gets to set their feet or their timing, their strength never enters the equation.`,
+   stat:`Multiple-time Lumpinee champion across weight classes, widely regarded among the greatest Muay Thai fighters ever.`,
+   url:_yt('saenchai teep technique breakdown')},
+
+  {fighter:'Buakaw',nick:'',tag:'Muay Thai',title:'Left kick & clinch dominance',
+   record:'240+ wins (Muay Thai/kickboxing)',stance:'Orthodox',division:'Welterweight (Muay Thai)',era:'2000s–present',
+   desc:`Buakaw built a global name on a thudding left body/head kick and suffocating clinch work. Physical, relentless and technically clean — pressure Muay Thai at its most effective.`,
+   signature:`The left roundhouse kick to the body and head — set up behind punches, thrown with full rotation, hard enough to end fights or break the opponent's posture round after round.`,
+   keys:[`Punches to draw the hands up, then the left kick comes underneath or over the top.`,
+     `Dominant clinch — controls posture, lands knees, and turns/dumps opponents to win the position.`,
+     `High pace and physical strength wear opponents down over the rounds.`,
+     `Switches between body and head kick off the same setup so the guard can't cover both.`],
+   setup:`He uses hands to occupy your guard, then the left kick attacks whichever level you left open. If you defend the kicks by closing distance, you fall into his clinch, where the knees take over. Every escape leads to another trap.`,
+   why:`A hard kick that can target two levels off one setup forces an impossible guard choice, and a fighter who also owns the clinch removes the standard counter to kicks (closing the distance). You're punished for staying out and for coming in.`,
+   counter:`Slick, mobile counter-strikers who won't engage the clinch and pick him apart on the outside (as some kickboxing losses showed) deny the phases he dominates.`,
+   drill:[`Punch-into-kick: throw a jab-cross to occupy the guard, then fire the rear kick to the open level.`,
+     `Clinch control rounds — fight for inside position, posture control and knees from the plum.`,
+     `Same-setup, two-targets: alternate body and head kick off an identical hand feint.`],
+   iq:`Buakaw shows that a simple, world-class weapon plus relentless pace beats complexity — you don't need fifty techniques if your three are unstoppable and you never stop coming.`,
+   stat:`Two-time K-1 World MAX champion, bringing Muay Thai to a global kickboxing audience.`,
+   url:_yt('buakaw left kick clinch breakdown')},
+
+  {fighter:'Ramon Dekkers',nick:'The Diamond',tag:'Muay Thai',title:'Aggressive boxing in Muay Thai',
+   record:'186-25-2 (Muay Thai)',stance:'Orthodox',division:'Lightweight (Muay Thai)',era:'1990s',
+   desc:`The Dutchman who beat the Thais at their own game by importing heavy, aggressive hands. Dekkers fused European boxing power with Muay Thai kicks and forced a forward, violent pace few could match.`,
+   signature:`The boxing-into-kick blitz: heavy hooks and crosses to back the opponent up, finished with a low kick or body kick as their guard collapses — overwhelming, forward, non-stop.`,
+   keys:[`Brings real boxing power and combinations into a Muay Thai range that wasn't ready for it.`,
+     `Walks opponents down with pressure, refusing to give them space or rhythm.`,
+     `Chains punches into kicks seamlessly so the kick lands while the hands are still being defended.`,
+     `Iron will and pace — he made every fight a war of attrition he was conditioned to win.`],
+   setup:`He overwhelms with hands to force the guard high and the opponent backward, then the kicks land low and to the body where the attention isn't. The aggression itself is the setup — pressure removes the opponent's time to think.`,
+   why:`Forcing a fighter to constantly defend power punches steals their offence and their composure; chaining kicks onto the end of boxing combinations attacks targets the opponent has stopped protecting. Pace converts skill exchanges into willpower contests.`,
+   counter:`Disciplined Muay Thai technicians who use the teep and clinch to break his rhythm and keep him at range (his great rivalry with Coban showed both sides) can stall the blitz.`,
+   drill:[`Hands-to-kick blitz: throw a 3-4 punch boxing combination and finish on a low or body kick, every set.`,
+     `Pressure rounds: walk a partner down behind combinations without letting them set their feet.`,
+     `Conditioning rounds at high output — the style demands a tank, so build it.`],
+   iq:`Dekkers proved styles can be hacked — importing a weapon (boxing) the dominant tradition under-trained against rewrote what was possible in the ring.`,
+   stat:`The first Western fighter to be truly feared in Thailand, twice named Muay Thai's fighter of the year by Thai media.`,
+   url:_yt('ramon dekkers boxing muay thai breakdown')},
+
+  {fighter:'Rodtang',nick:'The Iron Man',tag:'Muay Thai',title:'Pressure, durability & volume',
+   record:'270+ wins (Muay Thai)',stance:'Orthodox',division:'Flyweight (Muay Thai)',era:'2015–present',
+   desc:`Rodtang fights like a forward-marching machine — head down, hands up, walking through fire to land relentless volume. His durability lets him pressure in a way most fighters physically can't afford to.`,
+   signature:`The walk-through-to-land pressure: he accepts a shot to give two back, marching opponents to the ropes behind constant hooks, kicks and knees until they break.`,
+   keys:[`Elite chin and toughness let him close distance through the opponent's offence.`,
+     `Constant forward pressure denies opponents the space and time to set up.`,
+     `High volume of hooks, low kicks and knees in the pocket and clinch.`,
+     `Never stops coming — the psychological weight of unrelenting pressure is part of the weapon.`],
+   setup:`He absorbs early offence to get inside, then overwhelms with volume once he's there. The durability is the entry tool — opponents land but he keeps coming, and that breaks their belief before it breaks his body.`,
+   why:`Pressure works when the opponent can't make you pay enough to stop — Rodtang's chin lets him cross the danger zone, and once inside, his volume wins every exchange. Relentlessness is a tax the opponent pays in legs and morale.`,
+   counter:`Long, mobile fighters who use the teep, footwork and angles to keep him at range and refuse the pocket can pile up points before he gets to work — durability doesn't help if he can't close.`,
+   drill:[`Pressure-volume rounds: march a moving partner down behind a steady stream of strikes.`,
+     `Defensive-shell entries — practise crossing distance behind a tight guard so you can pressure safely.`,
+     `Clinch-and-knee work to capitalise the moment you've forced the opponent to the ropes.`],
+   iq:`Rodtang weaponises will — when an opponent realises nothing they throw will stop him, the fight is half-lost before the damage even accumulates.`,
+   stat:`Long-reigning ONE Championship flyweight Muay Thai champion, famous for a granite chin and a crowd-pleasing pace.`,
+   url:_yt('rodtang pressure muay thai breakdown')},
+
+  {fighter:'Khabib Nurmagomedov',nick:'The Eagle',tag:'Wrestling',title:'Chain wrestling & top pressure',
+   record:'29-0 (MMA)',stance:'Orthodox',division:'Lightweight',era:'2012–2020',
+   desc:`The most dominant grappler in MMA history. Khabib's relentless level changes, mat returns and smothering top pressure made world-class fighters look helpless — he didn't just take you down, he buried you there.`,
+   signature:`The chain-wrestling sequence: a missed shot flows into a body lock, into a trip, into a mat return — endless attempts linked together until the takedown is inevitable.`,
+   keys:[`Never relies on one takedown — he chains attempts so defending the first only opens the next.`,
+     `Crushing top pressure and hip control keep the opponent flat and exhausted.`,
+     `Mat returns: the instant you stand, he drags you back down before you can square up.`,
+     `Heavy ground-and-pound from dominant position forces you to give up your neck or your position.`],
+   setup:`He uses the threat of the takedown to back you to the cage, ties up, and chains attempts until one lands. Once on top, he sits in your hips, makes you carry his weight, and lets exhaustion do the work before the finish.`,
+   why:`Chained takedowns defeat takedown defence because defending uses energy and only buys a second before the next attempt; sustained top control compounds that fatigue. The opponent isn't beaten by one move — they're beaten by never getting a break from the wrestling.`,
+   counter:`Strong takedown defence buys time but rarely a full escape; the realistic blueprint is to hurt him early standing before the grappling phase begins and to make every scramble cost him — though no one managed it over a full fight.`,
+   drill:[`Chain-wrestling reps: shot → re-shot → body lock → trip, flowing without stopping between attempts.`,
+     `Mat-return drill: as your partner stands from bottom, drag them back down before they re-square.`,
+     `Top-pressure rounds — hold side control/mount and stay heavy, denying the bottom player's hips.`],
+   iq:`Khabib won the mental fight first — opponents knew they couldn't keep it standing, and that dread shaped every decision they made before he even shot.`,
+   stat:`Retired undefeated at 29-0, defending the UFC lightweight title and never losing a round in most fights.`,
+   url:_yt('khabib chain wrestling top pressure breakdown')},
+
+  {fighter:'Georges St-Pierre',nick:'GSP',tag:'MMA',title:'Level-change takedowns & the jab',
+   record:'26-2 (MMA)',stance:'Orthodox/switch',division:'Welterweight / Middleweight',era:'2006–2017',
+   desc:`The most complete MMA fighter of his era. GSP fused an Olympic-level double leg with a stiff, fight-controlling jab — he could out-box you to set up the takedown, or threaten the takedown to land the jab.`,
+   signature:`The superman-jab-to-double-leg: he fakes the lead hand high, you react up, and he changes levels into a textbook double leg before your defence can drop.`,
+   keys:[`A long, accurate jab controls range and racks up points while hiding the level change.`,
+     `Explosive, low double-leg with deep penetration and finish off the cage.`,
+     `Uses each threat to set up the other — strike fear opens the shot, shot fear opens the jab.`,
+     `Dominant top control and ground-and-pound once the takedown lands.`],
+   setup:`He establishes the jab to win the standing exchanges and force respect, then drops levels on the same look once the hands are occupied. The opponent has to defend two completely different attacks off one motion, and can't do both.`,
+   why:`A fighter who is genuinely elite at two phases that counter each other is nearly unsolvable — defend the strikes and you eat the takedown, defend the takedown and you eat the jab. The opponent's correct read is always wrong half the time.`,
+   counter:`A single perfectly-timed counter (as in his one upset loss) is the historical chink — and a fighter elite enough to be a credible threat in both phases simultaneously could force harder choices, though almost none existed.`,
+   drill:[`Jab-to-shot: throw the lead hand high, then immediately change levels into a double leg on the reaction.`,
+     `Penetration-step drill: deep, low double-leg entries with proper level change, not bending at the waist.`,
+     `Phase-link sparring — score by threatening both a strike and a takedown off the same setup.`],
+   iq:`GSP game-planned like a chess player and adapted mid-fight better than anyone — he studied opponents obsessively and beat them with their own tendencies.`,
+   stat:`Welterweight champion for years, then returned from a long layoff to win a second title at middleweight.`,
+   url:_yt('georges st pierre takedown jab breakdown')},
+
+  {fighter:'Henry Cejudo',nick:'Triple C',tag:'Wrestling',title:'Olympic wrestling in MMA',
+   record:'16-4 (MMA) · Olympic gold (wrestling)',stance:'Orthodox/switch',division:'Flyweight / Bantamweight',era:'2016–2020',
+   desc:`An Olympic gold-medal wrestler who learned to strike well enough to set up the best takedowns in the sport. Cejudo blends low, explosive shots with improving hands and relentless pace.`,
+   signature:`The strike-to-takedown entries: he closes behind combinations and a low stance, then hits explosive double and single legs the instant the opponent stops moving their feet to punch.`,
+   keys:[`Olympic-level penetration and finishing on the double and single leg.`,
+     `Low, balanced stance that's always a threat to change levels.`,
+     `Developed striking — enough power and volume to make the wrestling a true second threat.`,
+     `High pace and pressure that drain opponents into takedown range.`],
+   setup:`He uses pressure and strikes to root the opponent's feet, then changes levels when they're committed to punching. The improved hands mean defending the takedown by backing up just walks into the strikes.`,
+   why:`Olympic wrestling provides a takedown ceiling almost no MMA fighter can match; bolting credible striking onto it forces opponents to respect both, which is exactly when the elite wrestling becomes unstoppable.`,
+   counter:`Long strikers with great takedown defence who can keep him at range and make him shoot from distance (where even great shots fail) have troubled him standing.`,
+   drill:[`Strike-entry takedowns: combination first, then a low, explosive level change as they reset.`,
+     `Single-leg finishing drills from multiple positions — running the pipe, the trip, the lift.`,
+     `Pressure-to-shot rounds: walk a partner down, then shoot the instant their feet plant to throw.`],
+   iq:`Cejudo proved that an elite base skill (wrestling) plus 'good enough' everywhere else beats well-rounded fighters with no world-class weapon — depth in one phase wins.`,
+   stat:`The only fighter to hold an Olympic gold medal and a UFC title, and a simultaneous two-division champion.`,
+   url:_yt('henry cejudo wrestling mma breakdown')},
+
+  {fighter:'Kamaru Usman',nick:'The Nigerian Nightmare',tag:'Wrestling',title:'Smothering top game & boxing',
+   record:'20-4 (MMA)',stance:'Orthodox',division:'Welterweight',era:'2018–2022',
+   desc:`Usman married a suffocating wrestling-based top game with steadily improving, powerful boxing. He'd grind you on the cage and the mat, then — as his striking grew — knock you out on the feet.`,
+   signature:`The cage-wrestling chain into top control: he pins you to the fence, breaks you down with body-lock trips and mat returns, then drowns you under relentless top pressure.`,
+   keys:[`Elite cage wrestling — uses the fence to wear opponents down and set up takedowns.`,
+     `Heavy, smothering top control that exhausts and demoralises.`,
+     `Developing power boxing — a real overhand right that became a finishing weapon.`,
+     `Cardio and pressure that compound over five rounds.`],
+   setup:`He uses pressure and the wrestling threat to force opponents to the cage, grinds them there to drain the legs, and as the fight wears on, the now-tired opponent can't defend the improving hands. Wrestling sets up the knockout.`,
+   why:`Forcing opponents to defend takedowns on the fence for five rounds empties their gas tank; an empty tank can't move the head or reset the feet, which turns Usman's developing boxing into a finishing tool late.`,
+   counter:`A clean, range-based counter striker who catches him stepping in (as one upset showed) can interrupt the pressure; great takedown defence forces him into longer standing exchanges.`,
+   drill:[`Cage-wrestling rounds: pin a partner to the fence, work body-lock trips and mat returns.`,
+     `Top-control endurance — maintain heavy top position and posture for full rounds.`,
+     `Pressure-into-boxing: walk down a tiring partner and let the overhand go as their defence sags.`],
+   iq:`Usman shows the value of a foundation that wins the boring minutes — control the grind, drain the opponent, and your offence gets better as theirs gets worse.`,
+   stat:`Defended the UFC welterweight title five times during a long unbeaten run in the division.`,
+   url:_yt('kamaru usman wrestling boxing breakdown')},
+
+  {fighter:'Khamzat Chimaev',nick:'Borz',tag:'Wrestling',title:'Relentless takedowns & control',
+   record:'14-0 (MMA)',stance:'Orthodox',division:'Welterweight / Middleweight',era:'2020–present',
+   desc:`Chimaev hunts the takedown from the opening bell with terrifying explosiveness and grip strength, then suffocates from top position. He turns fights into one-sided grappling clinics almost immediately.`,
+   signature:`The early body-lock-to-takedown blitz: he closes distance fast, locks the body, and runs opponents off their feet before they've settled into the fight.`,
+   keys:[`Explosive entries and a powerful body lock that overwhelm opponents early.`,
+     `Heavy top control and back-take pressure once the fight hits the mat.`,
+     `Relentless pace in the grappling that doesn't let opponents recover or scramble out.`,
+     `Underrated power on the feet that keeps the takedown honest.`],
+   setup:`He pressures and shoots early, before opponents are warm and reactive, locks the body and runs them down. Once on top, he advances position constantly — to the back, to mount — never giving a static moment to escape.`,
+   why:`Attacking with full intensity from the first second catches opponents before they've found their timing, and elite control means once the takedown lands, there's no relief. Pace plus control removes the scramble where most grapplers escape.`,
+   counter:`As an undefeated fighter the blueprint is unproven, but the theoretical answers are elite takedown defence to force a long standing fight and championship-level cardio to survive the early storm into deeper water.`,
+   drill:[`Explosive entry-to-bodylock: close distance fast, lock the body, and run the opponent off balance.`,
+     `Positional advancement chains — side control to mount to back, never staying still on top.`,
+     `Early-pace rounds: train to push a hard grappling pace from the very first exchange.`],
+   iq:`Chimaev attacks the opponent's preparation — by forcing a grappling war before they've settled, he denies them the chance to ever fight their own fight.`,
+   stat:`Burst onto the scene with rapid, dominant, low-damage-absorbed wins that made him one of MMA's fastest-rising names.`,
+   url:_yt('khamzat chimaev wrestling breakdown')},
+
+  {fighter:'Daniel Cormier',nick:'DC',tag:'Wrestling',title:'Clinch, throws & dirty boxing',
+   record:'22-3 (MMA)',stance:'Orthodox',division:'Light Heavyweight / Heavyweight',era:'2013–2020',
+   desc:`A two-time Olympic wrestler who built an elite MMA clinch game — bodylock throws, trips and short, heavy dirty boxing against the fence. Cormier controlled the tie-up like few in MMA history.`,
+   signature:`The bodylock-to-throw against the cage: he ties up, gets the lock, and uses world-class wrestling to trip or throw opponents to the mat, then transitions to top control.`,
+   keys:[`Dominant clinch and bodylock control honed by two Olympic wrestling campaigns.`,
+     `Throws and trips from the tie-up that put opponents down hard.`,
+     `Short, heavy dirty boxing — uppercuts and hooks in close where opponents can't get leverage.`,
+     `Top control and ground-and-pound to capitalise on the takedown.`],
+   setup:`He closes to the clinch where his wrestling overwhelms, ties up to neutralise the opponent's striking, then throws or grinds dirty boxing until an opening for the takedown appears. The clinch is the great equaliser against bigger or rangier opponents.`,
+   why:`The clinch removes range — a rangy striker's reach means nothing tied up, and Cormier's wrestling dominates the tie-up. Throws score, dirty boxing damages, and the position drains the opponent while keeping Cormier safe.`,
+   counter:`Long fighters with the reach and oblique kicks to keep him out of the clinch entirely (his rival who beat him twice) deny the phase he dominates; the height/reach deficit was his recurring obstacle.`,
+   drill:[`Bodylock-to-throw: secure the lock in the clinch, then trip or throw a partner to the mat.`,
+     `Dirty-boxing rounds in the clinch — short uppercuts and hooks while controlling the tie-up.`,
+     `Clinch-entry drill: close the distance behind a feint and tie up before the opponent can strike.`],
+   iq:`Cormier showed that the clinch is the great neutraliser — a master of the tie-up can drag any striker into a phase where reach and range stop mattering.`,
+   stat:`Two-division UFC champion who held belts at light heavyweight and heavyweight after two Olympic wrestling appearances.`,
+   url:_yt('daniel cormier clinch wrestling breakdown')},
+
+  {fighter:'Gordon Ryan',nick:'The King',tag:'BJJ',title:'Body-lock passing system',
+   record:'Multiple-time ADCC champion',stance:'',division:'Grappling (no-gi)',era:'2018–present',
+   desc:`The most dominant no-gi grappler of the modern era. Gordon's pressure passing, body-lock control and back-attack system make him nearly impossible to hold off the pass or stop once he advances.`,
+   signature:`The body-lock pass: he over-under or body-locks your hips, kills your guard's mobility by controlling the connection between you, and walks around to side control with relentless pressure.`,
+   keys:[`Body-lock passing controls the hips, removing the opponent's main tool for retaining guard.`,
+     `Constant forward pressure and weight distribution that exhausts the bottom player.`,
+     `Seamless back-takes and chokes once the pass completes.`,
+     `Elite understanding of grips and connection — he kills your frames before he moves.`],
+   setup:`He establishes the body lock to staple your hips, eliminates your ability to recover guard or create space, then methodically walks to side control and the back. Each step removes one of your defensive options before he advances.`,
+   why:`Guard retention depends on hip mobility and frames; the body lock removes both by controlling the hips directly. Once the opponent can't move their hips or frame, the pass is a matter of patience, and the back-take follows.`,
+   counter:`Elite, mobile guard players with world-class leg-lock games who can threaten his legs during the pass force him to respect the entry — but even those are rare answers to his system.`,
+   drill:[`Body-lock passing reps: secure the hip connection, kill the guard's mobility, walk to side control.`,
+     `Hip-pin pressure — drill controlling a partner's hips to prevent guard recovery.`,
+     `Pass-to-back chains: complete the pass and immediately hunt the back-take and choke.`],
+   iq:`Gordon wins the grappling-IQ battle — he removes your options one at a time so that by the time he advances, you have no good defence left to choose.`,
+   stat:`Multiple-time ADCC champion widely regarded as the greatest no-gi grappler of his generation.`,
+   url:_yt('gordon ryan body lock passing system')},
+
+  {fighter:'Marcelo Garcia',nick:'',tag:'BJJ',title:'Guard, X-guard & back attacks',
+   record:'Multiple-time ADCC & world champion',stance:'',division:'Grappling',era:'2003–2014',
+   desc:`One of the most beloved and effective grapplers ever. Marcelo dominated bigger opponents with a relentless back-attack and guillotine system, and an X-guard that swept the largest men off their feet.`,
+   signature:`The seatbelt-to-rear-naked-choke system: once he takes the back, his grip control and constant choke threats make escape nearly impossible regardless of size difference.`,
+   keys:[`Elite back control — the seatbelt grip and constant choke pressure that gives no rest.`,
+     `X-guard sweeps that elevate and dump much larger opponents.`,
+     `A guillotine system that catches opponents shooting or scrambling.`,
+     `Constant motion and re-attacking — he never holds a position passively, always threatening the next thing.`],
+   setup:`He uses X-guard to off-balance and sweep, takes the back in the scramble, and chains choke threats until one finishes. His offence flows — defending one attack feeds him into the next, and he never lets you stabilise.`,
+   why:`Taking the back nullifies size and strength advantages — from there, technique and grip control decide it. Marcelo's relentless re-attacking means the opponent is always defending, never building their own offence.`,
+   counter:`Larger, defensively-sound grapplers who avoid the scrambles where he thrives and refuse to give up the back can limit him — but few could stay out of his system once it started flowing.`,
+   drill:[`Seatbelt-to-RNC: maintain back control with the seatbelt grip and chain the choke against resistance.`,
+     `X-guard sweeps: drill elevating and sweeping a larger partner from X-guard.`,
+     `Scramble-to-back: from a scramble, hunt the back-take and immediately establish hooks and grip.`],
+   iq:`Marcelo proved that constant offence is the best defence in grappling — if you're always attacking the next position, the opponent never gets to start their own game.`,
+   stat:`Four-time ADCC champion famous for submitting opponents far larger than himself.`,
+   url:_yt('marcelo garcia back attack guillotine breakdown')},
+
+  {fighter:'Roger Gracie',nick:'',tag:'BJJ',title:'Fundamentals: mount & cross-collar choke',
+   record:'10-time world champion (gi)',stance:'',division:'Grappling (gi)',era:'2004–2010 (peak)',
+   desc:`Roger dominated the highest level of gi BJJ with the most basic techniques executed perfectly. Pass, mount, cross-collar choke — the white-belt curriculum, done so well that black-belt world champions couldn't stop it.`,
+   signature:`The pass-to-mount-to-cross-collar-choke chain: textbook pressure passing into a high, heavy mount, then the cross-collar choke that everyone sees coming and no one can stop.`,
+   keys:[`Flawless fundamentals — pressure passing, mount control, and the cross-collar choke.`,
+     `Heavy, suffocating mount that breaks the opponent's posture and patience.`,
+     `Patience and precision — he doesn't rush; he makes the position perfect before attacking.`,
+     `Relentless application of basics that opponents can't defend even when they know what's coming.`],
+   setup:`He passes with pressure, climbs to a high mount that flattens and exhausts the opponent, then attacks the cross-collar choke. The opponent defends, he uses the defence to advance or open the collar — the choke is inevitable, not surprising.`,
+   why:`Fundamentals are fundamental because they're the highest-percentage techniques — Roger proved that perfect execution of the basics beats flashy complexity. A choke the opponent can't stop even when expected is the ultimate technical statement.`,
+   counter:`Extraordinarily defensive guard players who can survive the pass and deny the mount can extend matches — but at his peak, almost no one stopped the full chain.`,
+   drill:[`Mount-to-cross-collar: establish a high, heavy mount and drill the cross-collar choke against defence.`,
+     `Pressure-passing fundamentals — quality over flash, making each position dominant before advancing.`,
+     `Patience reps: hold a dominant position and attack only when it's perfect, not when it's rushed.`],
+   iq:`Roger Gracie is the ultimate argument for mastering the basics — depth beats breadth, and a perfect simple game beats an imperfect complex one.`,
+   stat:`Ten-time gi world champion, famous for submitting the entire bracket at the Mundials in a single year.`,
+   url:_yt('roger gracie mount cross collar choke breakdown')},
+
+  {fighter:'Demian Maia',nick:'',tag:'BJJ',title:'BJJ in MMA & the back-take',
+   record:'28-12 (MMA)',stance:'Orthodox',division:'Welterweight / Middleweight',era:'2010–2019',
+   desc:`The purest demonstration of high-level BJJ inside the cage. Maia closed distance, took opponents down, and worked methodically to the back and the rear-naked choke against fighters specifically training to stop exactly that.`,
+   signature:`The takedown-to-back-take-to-RNC: he secures the body lock or single leg, transitions to the back as the opponent defends, and finishes with the rear-naked choke — the whole sequence telegraphed and still unstoppable.`,
+   keys:[`Elite distance-closing and takedown entries to get the fight to the mat.`,
+     `World-class back-take timing — he reads the opponent's defensive movement and rides it to the back.`,
+     `Patient positional advancement; he never forces, he flows with the scramble.`,
+     `The rear-naked choke finish that opponents know is coming and still can't prevent.`],
+   setup:`He closes distance to clinch or shoot, takes the fight down, and as the opponent scrambles to escape, he uses their movement to climb to the back. The opponent's own defensive effort feeds the back-take, then the choke finishes.`,
+   why:`In MMA, taking the back removes striking entirely and nullifies athleticism — it's the safest dominant position. Maia proved that pure, patient BJJ still finishes elite, BJJ-aware fighters when the technique is good enough.`,
+   counter:`Elite takedown defence and sprawl-and-brawl strikers who keep it standing (where Maia was merely solid) deny him the phase he dominates — keeping him off the mat is the only reliable answer.`,
+   drill:[`Takedown-to-back: secure a body lock or single leg, then ride the scramble to back control.`,
+     `Back-retention-vs-escape: drill maintaining the back as a partner actively tries to escape.`,
+     `RNC-under-pressure: finish the choke against a fully resisting, defending partner.`],
+   iq:`Maia showed that a single elite skill, applied with total commitment and patience, can beat well-rounded opponents — even when they know exactly what's coming.`,
+   stat:`Recorded one of the most dominant grappling runs in UFC welterweight history, submitting or controlling elite contenders.`,
+   url:_yt('demian maia back take mma breakdown')},
+
+  {fighter:'Charles Oliveira',nick:'Do Bronx',tag:'BJJ',title:'Submission chains & scrambles',
+   record:'35-10 (MMA)',stance:'Orthodox',division:'Lightweight',era:'2020–present',
+   desc:`The most prolific finisher in UFC history. Oliveira flows from submission to submission in chaotic scrambles, and his improved striking now drops opponents into the grappling exchanges where he's lethal.`,
+   signature:`The submission chain in the scramble: a guillotine attempt flows to an arm-in choke, to the back, to the rear-naked choke — he attacks so fluidly that defending one threat opens the next.`,
+   keys:[`Elite scramble grappling — he's most dangerous in the chaos where positions change fast.`,
+     `Chains submissions seamlessly so each defence creates the next opening.`,
+     `Improved, aggressive striking that drops opponents into his grappling range.`,
+     `Comfort off his back and on top — he attacks submissions from everywhere.`],
+   setup:`He'll strike to create a scramble or get dropped/take a fight to the mat, then start the submission chain. The opponent defends the first attack and, in doing so, moves into the second — the chaos he creates is where his skill compounds.`,
+   why:`Most grapplers want control before attacking; Oliveira attacks during the scramble, when opponents are focused on position and least ready to defend submissions. Chained attacks defeat defence because each escape is the entry to the next finish.`,
+   counter:`Fighters who keep it standing and avoid the scrambles, or who pressure his historically suspect moments under fire, can avoid his strongest phase — discipline against chaos is the answer.`,
+   drill:[`Submission chains: drill flowing guillotine → back → RNC so each defence feeds the next attack.`,
+     `Scramble grappling — train attacking submissions during transitions, not just from control.`,
+     `Strike-to-grapple: use striking to initiate a scramble, then immediately hunt the submission.`],
+   iq:`Oliveira thrives where others panic — by being most comfortable in the scramble, he turns the most chaotic, even moments of a fight into his biggest advantage.`,
+   stat:`Holds the UFC record for the most finishes and the most submissions in promotional history.`,
+   url:_yt('charles oliveira submission chains breakdown')},
+
+  {fighter:'Demetrious Johnson',nick:'Mighty Mouse',tag:'MMA',title:'Seamless phase transitions',
+   record:'25-4-1 (MMA)',stance:'Orthodox/switch',division:'Flyweight',era:'2012–2018',
+   desc:`The most technically seamless fighter MMA has produced. DJ flows between striking, wrestling and submissions with no visible seam — a strike becomes a takedown becomes a submission in one unbroken motion.`,
+   signature:`The strike-to-takedown-to-submission flow: he'll throw a combination, change levels into a takedown off the opponent's reaction, and transition straight into a submission — the famous flying-armbar suplex being the highlight version.`,
+   keys:[`No seams between phases — striking, wrestling and grappling are one continuous skill set.`,
+     `Reads the opponent's reaction to one threat and flows into the counter to it.`,
+     `Elite speed and timing in transitions, where most fighters are vulnerable.`,
+     `Creative finishing — he attacks submissions from positions others wouldn't see.`],
+   setup:`He attacks in one phase, reads how you defend, and flows into the phase that beats your defence — strike, you cover, he shoots; you sprawl, he transitions; you scramble, he submits. There's no pause for you to reset between phases.`,
+   why:`Most fighters are vulnerable in the transition between phases (the moment between striking and wrestling); DJ lives in those transitions, so he attacks exactly when opponents are least defended. Seamlessness removes the opponent's reset.`,
+   counter:`Larger, powerful opponents who can disrupt his flow with strength in the scrambles (the one fighter who beat him leaned on size) present the rare problem — raw physicality interrupting the technical flow.`,
+   drill:[`Phase-flow drill: strike → level change → submission, flowing without stopping between phases.`,
+     `Transition attacks — practise attacking in the moment between phases, not just from set positions.`,
+     `Reaction-chaining: respond to a partner's defence by flowing to the technique that beats it.`],
+   iq:`DJ proved that the seams between disciplines are where fights are won — eliminate your own seams and you attack the opponent precisely where they're weakest.`,
+   stat:`Holds the record for the most consecutive UFC title defences, with a series of highlight-reel finishes.`,
+   url:_yt('demetrious johnson transitions breakdown')},
+
+  {fighter:'Fedor Emelianenko',nick:'The Last Emperor',tag:'Sambo',title:'Sambo, ground-and-pound & calm',
+   record:'40-7 (1 NC) (MMA)',stance:'Orthodox',division:'Heavyweight',era:'2000–2010 (peak)',
+   desc:`The legendary heavyweight who blended Sambo throws, slick submissions and brutal ground-and-pound with an eerie, unshakeable calm. Fedor solved chaos with composure and finished from everywhere.`,
+   signature:`The ground-and-pound-into-submission: heavy, looping ground strikes force the opponent to react defensively, opening the armbar or kimura — violence that creates the submission.`,
+   keys:[`Sambo throws and trips that put opponents down hard from the clinch.`,
+     `Wild but effective casting punches that close distance and land power.`,
+     `Brutal ground-and-pound that forces opponents to expose limbs and necks.`,
+     `Unshakeable composure — he never panicked, even when hurt, and capitalised on opponents who did.`],
+   setup:`He'd close with looping power shots or a throw, get on top, and rain ground-and-pound until the opponent gave up an arm defending — then take the submission. The striking and the submission feed each other on the ground.`,
+   why:`Ground-and-pound forces a defensive reaction (covering up, framing) that exposes the arms and neck; a great submission grappler punishes that exposure instantly. Composure under fire meant Fedor capitalised on the panic he created.`,
+   counter:`A massive size-and-reach advantage with great takedown defence (the larger fighters who beat him late in his career) could keep him outside and out-physical him — the heavyweight size game was his eventual undoing.`,
+   drill:[`G-n-p-to-submission: from top position, strike to draw a defensive reaction, then take the exposed armbar.`,
+     `Sambo-style throws from the clinch — trips and dumps that put a partner down hard.`,
+     `Composure drill: train staying calm and technical in bad positions rather than scrambling in panic.`],
+   iq:`Fedor's greatest weapon was psychological — the calm itself. Opponents unravelled against a man who never did, and he harvested their panic with technique.`,
+   stat:`Went undefeated for nearly a decade in his prime, widely considered the greatest heavyweight of the PRIDE era.`,
+   url:_yt('fedor emelianenko ground and pound breakdown')},
+
+  {fighter:'Amanda Nunes',nick:'The Lioness',tag:'MMA',title:'Power, finishing & complete game',
+   record:'23-5 (MMA)',stance:'Orthodox',division:'Bantamweight / Featherweight',era:'2016–2023',
+   desc:`The greatest women's MMA fighter ever — terrifying power, finishing instinct and a genuinely complete game. Nunes could knock you out, take you down, or submit you, and she finished a who's-who of all-time greats.`,
+   signature:`The power-overhand-into-finish: she lands the heavy right hand, recognises the opponent is hurt instantly, and swarms with follow-up power to close the show before they recover.`,
+   keys:[`Genuine one-punch knockout power, especially in the right hand.`,
+     `Killer instinct — she recognises a hurt opponent and finishes immediately.`,
+     `A complete game: striking, wrestling and BJJ all at a high level, so there's no safe phase.`,
+     `Improved composure and pacing in her prime — she learned to channel the power rather than burn out.`],
+   setup:`She pressures behind power and lands the heavy shot, then reads the hurt instantly and unloads to finish. The threat of the power forces opponents to be cautious, which opens her takedowns and submissions as second and third options.`,
+   why:`Power plus a complete game is unsolvable — respect the striking and you're taken down; defend the takedown and you're knocked out. The finishing instinct converts every moment of opponent vulnerability into a fight-ender.`,
+   counter:`Movement-based fighters who avoid the early power and drag her into deep water (her early career showed cardio could be tested) had the best theoretical path before she fixed her pacing.`,
+   drill:[`Power-into-finish: land a hard shot on the bag/partner, then immediately unload follow-ups to 'finish'.`,
+     `Phase-threat sparring — establish the striking threat, then hit the takedown off their caution.`,
+     `Composure-under-success: practise staying technical and balanced while swarming a hurt opponent.`],
+   iq:`Nunes proved that power respected is options created — when opponents must fear your hands, every other part of your game opens up for free.`,
+   stat:`The first woman to be a simultaneous two-division UFC champion, with finishes over multiple all-time greats.`,
+   url:_yt('amanda nunes finishing power breakdown')},
+
+  {fighter:'Valentina Shevchenko',nick:'Bullet',tag:'MMA',title:'Precision, timing & counters',
+   record:'24-4-1 (MMA)',stance:'Orthodox/switch',division:'Flyweight',era:'2017–2023',
+   desc:`A Muay Thai-based technician who fights with surgical precision and elite timing. Shevchenko counters with perfect accuracy, controls range, and mixes in throws and clinch work from a deep traditional base.`,
+   signature:`The counter-off-the-entry: she reads the opponent's attack, steps just off-line, and lands a pinpoint counter — often a check hook, knee or kick — as they commit, then resets safely.`,
+   keys:[`Deep Muay Thai base — clinch, knees, kicks and elite timing.`,
+     `Surgical counter striking — she punishes commitment with accuracy, not volume.`,
+     `Excellent range control and footwork to fight at her preferred distance.`,
+     `Throws and clinch work that surprise opponents expecting a pure striker.`],
+   setup:`She controls distance and waits for the opponent to commit, then counters precisely off their entry. Her patience forces opponents to lead into her counters, and the threat of those counters makes them tentative and easier to read.`,
+   why:`Precision counter striking is high-percentage and low-risk — she lands clean while the opponent is committed and open, and absorbs little in return. Elite timing means she's always a half-beat ahead of the attack she's punishing.`,
+   counter:`Relentless pressure and volume from a younger, faster opponent (her upset loss showed) who refuses to give her clean counters and forces a scramble-heavy pace can disrupt the precision game.`,
+   drill:[`Counter-off-entry: partner attacks, you step off-line and land a precise counter in the same beat.`,
+     `Range-control rounds — fight at your optimal distance, forcing the partner to commit to reach you.`,
+     `Clinch-and-knee work to add a surprise phase to a striking-based game.`],
+   iq:`Shevchenko fights like a sniper — she doesn't chase exchanges, she waits for the perfect shot and makes it count, conceding almost nothing in return.`,
+   stat:`One of the most dominant women's flyweight title reigns in UFC history, built on precision over volume.`,
+   url:_yt('valentina shevchenko counter striking breakdown')},
+
+  {fighter:'Islam Makhachev',nick:'',tag:'Sambo',title:'Sambo grappling & top control',
+   record:'26-1 (MMA)',stance:'Orthodox/switch',division:'Lightweight',era:'2020–present',
+   desc:`A combat-Sambo world champion who refined Khabib's blueprint into an even more polished package — elite takedowns, suffocating top control, and improving, accurate striking to set it all up.`,
+   signature:`The strike-to-takedown-to-back: he uses developing striking to close distance, hits a clean takedown, and works methodically to the back and the finish with relentless top pressure.`,
+   keys:[`Combat-Sambo base — throws, trips and ground control at a world-championship level.`,
+     `Smothering top control that exhausts opponents and sets up submissions.`,
+     `Accurate, improving striking that makes the takedown a true second threat.`,
+     `Back-take and submission finishing once top control is established.`],
+   setup:`He uses his striking to make opponents respect the standup, then changes levels for the takedown when they commit to defending the strikes. On top, he advances position relentlessly toward the back and the finish.`,
+   why:`Like the best grapplers, he makes opponents defend two things that counter each other — strike fear opens the takedown, takedown fear opens the strikes. Elite top control then removes the escape, and the submission follows.`,
+   counter:`The one blemish on his record came early in his career; the theoretical answer remains world-class takedown defence and the cardio to survive his top pressure into deep water — an extremely tall order.`,
+   drill:[`Strike-to-takedown: establish a striking threat, then change levels for the takedown as they react.`,
+     `Top-control-to-back: maintain heavy top position and hunt the back-take and submission.`,
+     `Sambo throws and trips from the clinch to diversify your takedown entries.`],
+   iq:`Makhachev refined a proven system — he took the most dominant blueprint in MMA and added the striking that makes it even harder to solve.`,
+   stat:`Took the UFC lightweight title and defended it against elite competition, extending the Dagestani grappling dynasty.`,
+   url:_yt('islam makhachev grappling breakdown')}
   ];
-  return d.map((c,i)=>({id:'pc'+i,fighter:c[0],title:c[1],tag:c[2],desc:c[3],url:c[4]}));
+  return d.map((c,i)=>Object.assign({id:'pc'+i},c));
 }
 /* ---- reel url parsing & embeds ---- */
 function parseReelUrl(url){
@@ -4502,7 +5055,7 @@ let filmTab='reels';
 ROUTES.film=function(){
   // refresh the bundled reel library on existing installs, keeping user-added reels
   if(!S.reels||(S.reelsVer||0)<REELS_VER){const userReels=(S.reels||[]).filter(r=>!r.seed);S.reels=seedReels().concat(userReels);S.reelsVer=REELS_VER;saveNow();}
-  if(!S.proClips){S.proClips=seedProClips();saveNow();}
+  if(!S.proClips||(S.proClipsVer||0)<PROCLIPS_VER){S.proClips=seedProClips();S.proClipsVer=PROCLIPS_VER;saveNow();}
   const tabs=[['reels','Reels'],['tech','Techniques'],['mytape','My Tape'],['pro','Pro Breakdown']];
   return`<div class="view-head"><div class="crumb">Film Room</div><h1>Film Room</h1>
     <p>Watch embedded training reels, master a vast library of techniques with animated demos, drop in clips of yourself for AI corrections, and study how the pros do what you don't — yet.</p></div>
@@ -4777,34 +5330,74 @@ async function analyzeTape(id){
   }catch(e){if(out)out.innerHTML=`<div class="banner red"><div>${esc(friendlyAIError(e))}</div></div>`;}
 }
 /* ---- PRO BREAKDOWN (AI explains what the pro does) ---- */
+let proFilter='All';
 function filmPro(){
   const clips=S.proClips||[];
+  const tags=['All'].concat(Array.from(new Set(clips.map(c=>c.tag))));
+  if(tags.indexOf(proFilter)<0)proFilter='All';
+  const shown=proFilter==='All'?clips:clips.filter(c=>c.tag===proFilter);
   return`<div class="card mb">
-    <div class="fw6 mb">Study the greats</div>
-    <p class="fz12 muted">Pick a champion's signature skill and your AI coach explains exactly what they're doing — the details you can steal and start drilling.</p>
+    <div class="row-between"><div class="fw6 mb">Study the greats</div><span class="pill gold sm">${clips.length} fighters</span></div>
+    <p class="fz12 muted">A film-study library of the most dominant fighters in combat sports. Tap any fighter for a full breakdown — the mechanics, the setup, why it works, how it gets beaten, and exactly how to drill it into your own game. Every breakdown reads instantly on-device; layer your AI coach on top for a version personalized to your style.</p>
+    <div class="chip-row mt">${tags.map(t=>`<span class="chip ${proFilter===t?'on':''}" onclick="proFilter='${esc(t).replace(/'/g,"\\'")}';rerenderFilm()">${esc(t)}${t==='All'?'':` <span class="muted">${clips.filter(c=>c.tag===t).length}</span>`}</span>`).join('')}</div>
   </div>
   <div class="grid g2">
-    ${clips.map(proCard).join('')}
+    ${shown.map(proCard).join('')}
   </div>`;
 }
 function proCard(c){
-  return`<div class="card" id="pro-${c.id}">
-    <div class="row-between"><div><div class="fw6">${esc(c.fighter)}</div><div class="fz12 gold">${esc(c.title)}</div></div><span class="tag">${esc(c.tag)}</span></div>
+  return`<div class="card pro-card" id="pro-${c.id}" onclick="openProBreakdown('${c.id}')" style="cursor:pointer">
+    <div class="row-between"><div><div class="fw6">${esc(c.fighter)}</div>${c.nick?`<div class="fz11 muted" style="font-style:italic">“${esc(c.nick)}”</div>`:''}</div><span class="tag">${esc(c.tag)}</span></div>
+    <div class="fz12 gold mt" style="font-weight:600">${esc(c.title)}</div>
+    <div class="chip-row mt" style="gap:5px">
+      ${c.record?`<span class="pill sm">${esc(c.record.split(' · ')[0])}</span>`:''}
+      ${c.division?`<span class="pill sm">${esc(c.division)}</span>`:''}
+    </div>
     <p class="fz12 muted mt">${esc(c.desc)}</p>
-    <div class="row gap mt">
-      <button class="btn sm" onclick="explainPro('${c.id}')">${icon('bolt')} Explain the technique</button>
+    <div class="row gap mt" onclick="event.stopPropagation()">
+      <button class="btn sm" onclick="openProBreakdown('${c.id}')">${icon('bolt')} Full breakdown</button>
       <a class="btn ghost sm" href="${c.url}" target="_blank" rel="noopener">↗ Watch clips</a>
     </div>
-    <div id="proOut-${c.id}" class="mt"></div>
   </div>`;
 }
-async function explainPro(id){
+function _proList(items){return`<ul style="margin:6px 0 0;padding-left:18px;list-style:disc">${items.map(x=>`<li style="margin:4px 0;font-size:13px;line-height:1.5">${esc(x)}</li>`).join('')}</ul>`;}
+function _proOl(items){return`<ol style="margin:6px 0 0;padding-left:20px">${items.map(x=>`<li style="margin:5px 0;font-size:13px;line-height:1.5">${esc(x)}</li>`).join('')}</ol>`;}
+function _proSection(label,body,accent){return`<div style="margin-top:16px">
+    <div class="fz11" style="letter-spacing:.08em;text-transform:uppercase;color:${accent||'var(--gold)'};font-weight:700;margin-bottom:4px">${label}</div>
+    ${body}</div>`;}
+function openProBreakdown(id){
+  const c=(S.proClips||[]).find(x=>x.id===id);if(!c)return;
+  const stats=[['Record',c.record],['Stance',c.stance],['Division',c.division],['Era',c.era]].filter(s=>s[1]);
+  const statStrip=`<div class="grid g4 mt" style="gap:8px">${stats.map(s=>`<div class="stat-box"><div class="stat-label">${s[0]}</div><div class="fz12" style="font-weight:600;line-height:1.3;margin-top:2px">${esc(s[1])}</div></div>`).join('')}</div>`;
+  const html=`<div class="modal-head"><div><h2 style="margin:0">${esc(c.fighter)}</h2>${c.nick?`<div class="fz12 gold" style="font-style:italic">“${esc(c.nick)}”</div>`:''}</div><button class="x-btn" onclick="closeModal()">✕</button></div>
+  <div class="row gap" style="align-items:center;margin-top:2px"><span class="tag">${esc(c.tag)}</span><span class="fz13 gold" style="font-weight:600">${esc(c.title)}</span></div>
+  ${statStrip}
+  ${_proSection('Overview',`<p class="fz13" style="line-height:1.6;margin:0">${esc(c.desc)}</p>`)}
+  ${c.signature?`<div style="margin-top:16px;border:1px solid var(--gold);border-radius:4px;padding:12px 14px;background:rgba(200,168,75,.07)">
+    <div class="fz11" style="letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:4px">★ Signature Weapon</div>
+    <p class="fz13" style="line-height:1.6;margin:0">${esc(c.signature)}</p></div>`:''}
+  ${c.keys?_proSection('The Mechanics — what to watch',_proList(c.keys)):''}
+  ${c.setup?_proSection('The Setup',`<p class="fz13" style="line-height:1.6;margin:0">${esc(c.setup)}</p>`):''}
+  ${c.why?_proSection('Why It Works',`<p class="fz13" style="line-height:1.6;margin:0">${esc(c.why)}</p>`):''}
+  ${c.counter?_proSection('How It Gets Beaten',`<p class="fz13" style="line-height:1.6;margin:0">${esc(c.counter)}</p>`,'var(--red)'):''}
+  ${c.drill?_proSection('Drill It Into Your Game',_proOl(c.drill),'var(--green)'):''}
+  ${c.iq?`<div style="margin-top:16px;border-left:3px solid var(--gold);padding:8px 0 8px 12px"><div class="fz11 muted" style="text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:3px">Fight IQ</div><p class="fz13" style="line-height:1.6;margin:0;font-style:italic">${esc(c.iq)}</p></div>`:''}
+  ${c.stat?`<p class="fz12 muted mt" style="line-height:1.5"><b style="color:var(--gold)">By the numbers:</b> ${esc(c.stat)}</p>`:''}
+  <div class="divider"></div>
+  <div class="row gap" style="flex-wrap:wrap">
+    <button class="btn sm" onclick="explainPro('${c.id}','proModalOut')">${icon('bolt')} Personalize this for my style (AI)</button>
+    <a class="btn ghost sm" href="${c.url}" target="_blank" rel="noopener">↗ Watch clips</a>
+  </div>
+  <div id="proModalOut" class="mt"></div>`;
+  openModal(html,true);
+}
+async function explainPro(id,targetId){
   const c=(S.proClips||[]).find(x=>x.id===id);if(!c)return;
   /* coach runs on-device — no key required */
-  const out=$('#proOut-'+id);if(out)out.innerHTML='<div class="muted fz12">Breaking it down…</div>';
-  const sys=`You are an elite MMA analyst and coach. ${profileContext()} Explain a named fighter's signature technique to a developing fighter. Markdown: **What ${c.fighter} does** (the mechanics, step by step), **Why it works**, **How YOU drill it** (2-3 concrete progressions for my level and disciplines). Reference how it fits MY game given my style. Under 200 words.`;
+  const out=$('#'+(targetId||('proOut-'+id)));if(out)out.innerHTML='<div class="muted fz12">Tailoring this to your game…</div>';
+  const sys=`You are an elite MMA analyst and coach. ${profileContext()} A developing fighter is studying ${c.fighter}'s signature skill: "${c.title}". Explain how THEY specifically should adapt and drill it given their style, level and disciplines. Markdown with these sections: **For your game** (how it fits your style), **Steal this first** (the single highest-value detail to start with), **This week's drills** (2-3 concrete progressions for your level). Reference my profile. Under 220 words. Be specific and practical.`;
   try{
-    const res=await callClaude([{role:'user',content:`Break down ${c.fighter}'s "${c.title}" — ${c.desc}. Explain what they're doing that I probably am not, and how I learn it.`}],sys,800);
+    const res=await callClaude([{role:'user',content:`Personalize ${c.fighter}'s "${c.title}" for me. Context: ${c.desc} Signature: ${c.signature||''}`}],sys,900);
     if(out)out.innerHTML=res?`<div class="ai-bubble">${md(res)}</div>`:'<div class="muted fz12">No response returned.</div>';
   }catch(e){if(out)out.innerHTML=`<div class="banner red"><div>${esc(friendlyAIError(e))}</div></div>`;}
 }
