@@ -3103,7 +3103,7 @@ function apiKeyMissingNote(){
   // note (never a blocking nag) that an optional cloud upgrade is available.
   if(aiConfigured())return'';
   return`<div class="banner ok"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L3 6v6c0 5 3.8 8.5 9 10 5.2-1.5 9-5 9-10V6l-9-4z"/><path d="M9 12l2 2 4-4"/></svg>
-    <div><b>On-device coach active.</b> Every AI feature works right now with no key and no sign-in. <span class="muted">(Optional: add an Anthropic key in CONFIG for cloud-powered, video-aware answers.)</span></div></div>`;
+    <div><b>On-device coach active.</b> Every AI feature — including video-aware tape review — works right now with no key and no sign-in. <span class="muted">(Optional: add an Anthropic key in CONFIG to layer cloud vision on top.)</span></div></div>`;
 }
 
 /* ---------- AI coach state ---------- */
