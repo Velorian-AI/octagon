@@ -840,7 +840,7 @@ const DEFAULT_STATE={
   recovery:[], injuries:[],
   meals:[], hydration:{}, electrolytes:{}, foodLog:{}, supplements:[], supplementLog:{},
   journal:[], habits:[], habitLog:{}, campPlan:null,
-  coachMessages:[],
+  coachMessages:[], localAI:{enabled:false,model:'Llama-3.2-3B-Instruct-q4f16_1-MLC'},
   partners:null, partnerRequests:[], partnerNotes:{}, partnerMessages:{}, partnerRatings:[],
   gyms:null, favGyms:[], coaches:null, bookings:[], seminars:[], cornerRequests:[],
   fights:[], rankings:[], belts:[],
@@ -2690,7 +2690,7 @@ const COACH_KB=[
   {k:['takedown','double leg','single leg','shot','wrestling','td'],t:'Takedowns — Level Change & Entries',
    b:["Change levels with your knees, not your back — chest up, eyes up the whole way in.","Set up shots behind strikes: a 1-2 freezes the hands, then drop on the double.","Penetration step deep, drive off the back leg, and turn the corner — don't stall on the legs.","On the single: head inside, run the pipe or lift-and-turn; never leave your head out."],
    drill:'Reactive shots: partner throws a lazy 1-2, you slip and shoot. 4 rounds of 10 entries.'},
-  {k:['sprawl','takedown defense','td defense','stuff'],t:'Takedown Defense & The Sprawl',
+  {k:['sprawl','takedown defense','td defense','stuff','taken down','take down','keep getting taken','defend takedown','stop the takedown'],t:'Takedown Defense & The Sprawl',
    b:["React early — sprawl the moment you feel the level change, hips heavy, legs kicked back.","Frame on the head/biceps and circle away from the trapped side.","Underhooks are everything; win the inside, peel the hands, and stand back up.","Don't fight from your knees — wrestle up immediately before they settle into the position."],
    drill:'Sprawl-and-spin: partner shoots, you sprawl, spin to the back, reset. 5 rounds.'},
   {k:['guard','closed guard','bottom','sweep'],t:'Playing Guard',
@@ -2722,16 +2722,71 @@ const COACH_KB=[
    drill:'Nightly 5-min visualisation: see yourself executing your game plan and recovering from a bad moment.'},
   {k:['camp','prepare','prep','training plan','periodization','periodisation'],t:'Structuring a Fight Camp',
    b:["8 weeks is a solid camp: weeks 1-3 build volume, 4-6 sharpen and spar hard, 7 taper, week 8 fight.","Peak your hard sparring 2-3 weeks out, then back off — you don't get fitter in the last week, only tired.","Front-load conditioning; shift to technical sharpness and game-plan reps as the fight nears.","Schedule deload days — adaptation happens in recovery, not in the grind."],
-   drill:null}
+   drill:null},
+  {k:['uppercut','upper cut'],t:'The Uppercut',
+   b:["Slight dip in the knees, then drive up through the legs — the power is vertical, from the floor.","Keep the elbow under the fist; don't flare it out or it becomes a slow, telegraphed shovel.","It lands inside a tight guard and on anyone ducking or coming forward.","Best hidden in combinations — cross to the head, then the uppercut splits the guard."],
+   drill:'Bag work: hook-uppercut-hook on the inside, 5 rounds, keep the off-hand pinned to your chin.'},
+  {k:['overhand','over hand','looping'],t:'The Overhand',
+   b:["Arc it over the opponent's jab — step the lead foot offline as you throw to clear their centre.","It's a power shot off the back hand; commit the hips and shoulder fully.","High-risk, high-reward — recover your head and reset fast, you're exposed on the way in.","Lands beautifully on a fighter who jabs and stands tall, or against a southpaw's open side."],
+   drill:'Pad drill: slip the jab outside, answer with the overhand, exit on an angle. 4 rounds.'},
+  {k:['elbow','elbows'],t:'Elbows',
+   b:["Short range only — turn the hips and shoulder and cut with the point of the elbow, not the forearm.","Horizontal elbow slashes across the temple/jaw; the upward elbow splits the guard underneath.","Best off a clinch break, as they close in, or to finish a boxing combination at close range.","Keep the off-hand defending — elbows put your face right in their range."],
+   drill:'Clinch-to-elbow: break the plum, fire a horizontal elbow, reset. 4x2min.'},
+  {k:['knee','knees','spear knee','clinch knee'],t:'Knee Strikes',
+   b:["Drive the knee with the hips, not just the leg — thrust the hips forward and through the target.","From the clinch, pull the head/neck down to meet the knee for double the impact.","Straight knee to the body under the chest; diagonal/up-knee to the head as you break posture.","Point the toe down and tuck the heel to sharpen the 'spear' of the knee."],
+   drill:'Thai pads: collar-tie pull into straight knee, alternate sides, 5 rounds, off-balance them first.'},
+  {k:['combination','combo','combos','put together','sequence'],t:'Building Combinations',
+   b:["Start and finish with different hands so you're always balanced and never caught mid-flurry.","Vary levels — head, body, head — to break the guard and the opponent's read.","Every combo should end with movement: pivot or step off-line so you're gone before the return.","Three to four strikes max in the pocket; longer and you're stationary and countered."],
+   drill:'Shadowbox 6 set combos (e.g. jab-cross-hook, body-cross-hook), each ending in a pivot. 3 rounds.'},
+  {k:['counter','counters','timing','read','catch them'],t:'Counter Striking',
+   b:["Make them miss, then make them pay — defend with a purpose, never just to survive.","Pre-load the counter: know the cross is coming over your slipped jab and it's already loaded.","The check hook and the straight-right-over-the-jab are the two kings of counters.","Counter and immediately move off-line — don't admire it standing in the pocket."],
+   drill:'Partner feeds single shots; you slip/parry and fire one clean counter, then exit. 4 rounds.'},
+  {k:['distance','range','reach','spacing'],t:'Distance & Range Control',
+   b:["Know your range and theirs — be just outside their reach and just inside yours.","The jab and the teep are your measuring sticks; use them to find and hold the line.","Against a longer fighter, win the entry; against a shorter one, hold them on the end of your shots.","Control distance with footwork first, hands second — feet keep you safe, hands punish."],
+   drill:'Tag drill: light spar where you only score with the jab/teep at the very tip of range. 3 rounds.'},
+  {k:['feint','feints','fake','setup','set up','set-up'],t:'Feints & Setups',
+   b:["Sell the feint with the eyes, shoulders and feet — a twitch that gets no reaction is wasted.","Get a reaction, then punish the reaction: feint the jab, they cover, you go to the body.","Change rhythm — fast-fast-slow — so they can't time your real entries.","The threat of a takedown sets up the strike, and vice-versa. Make them defend two things."],
+   drill:'Shadowbox 3 rounds where every real strike is preceded by a believable feint.'},
+  {k:['pressure','aggressive','walked down','pushed back','backing up','cut off ring'],t:'Dealing With Pressure',
+   b:["Never retreat in straight lines — circle off-angle so you're not herded into the cage.","Meet pressure with the lead teep and jab to break their forward momentum and reset distance.","Pivot off the cage the instant your back nears it; don't get pinned and smothered.","Make them pay for walking in — sharp counters discourage relentless pressure fast."],
+   drill:'Partner walks you down on the pads; you circle, teep to reset, and counter. 4 rounds.'},
+  {k:['beginner','start','new','getting started','first','noob','rookie','where do i begin'],t:'Starting Out — The First 90 Days',
+   b:["Master stance and footwork before anything — balance is the base of every technique.","Drill the jab, cross, and the sprawl until they're reflex; they show up in every fight.","Spar light and often, with control — you learn timing live, not on the bag alone.","Build the habit first: 3-4 consistent sessions a week beats occasional heroic ones."],
+   drill:'Daily 10-min shadowbox: stance, jab, cross, slip, pivot. Film it weekly and compare.'},
+  {k:['spar','sparring','rolling','live'],t:'How to Spar Smart',
+   b:["Spar with goals, not ego — pick one thing to work and let everything else be 60%.","Control the intensity; you can't improve technique while in survival mode.","Tap early and often in grappling — taps are reps, not losses.","Review honestly after: what got you hit, what landed, and one fix for next time."],
+   drill:'Themed rounds: one round defense-only, one round jab-only, one round clinch-only.'},
+  {k:['recovery','rest','sore','overtrain','overtraining','tired all','rest day','injury','injuries','hurt'],t:'Recovery & Staying Healthy',
+   b:["Adaptation happens in rest, not the grind — schedule 1-2 full rest days a week.","Sleep is the #1 recovery tool: 7-9 hours, consistent times, dark and cool.","Train through soreness, never through sharp joint pain — that's how camps end.","Manage load: hard days hard, easy days genuinely easy. Avoid the grey-zone grind."],
+   drill:null},
+  {k:['nutrition','diet','eat','eating','food','meal','protein','fuel'],t:'Fueling the Fighter',
+   b:["Protein anchors every meal (~1.6-2.2g/kg/day) to repair and hold muscle through camp.","Carbs are fuel, not the enemy — time them around your hardest sessions for output.","Hydrate daily, not just fight week; performance and recovery both live on water.","Eat mostly whole foods; you can't out-supplement a poor base diet."],
+   drill:null},
+  {k:['strength','power','lifting','weights','explosive','gym','s&c','strong'],t:'Strength & Power for Fighting',
+   b:["Lift for power and rate of force, not the mirror — heavy compounds and explosive work.","2 short sessions a week in camp maintains strength without stealing recovery from skill work.","Train the posterior chain (hips, hamstrings, back) — that's where takedown and punch power lives.","Keep it specific and brief late in camp; you fight with your skills, strength just amplifies them."],
+   drill:'Twice weekly: trap-bar deadlift or squat (3-5 reps) + med-ball throws for explosive power.'},
+  {k:['flexibility','mobility','stretch','stretching','hips','kick higher','flexible'],t:'Mobility & Flexibility',
+   b:["Dynamic mobility before training, longer static stretching after or on rest days.","Open the hips for head kicks and deep guard — hip flexibility unlocks both.","Daily 10 minutes beats a weekly hour; consistency drives the range.","Mobility is also injury insurance — supple joints absorb the chaos of sparring."],
+   drill:'Daily 10-min routine: hip 90/90s, cossack squats, shoulder dislocates, deep squat holds.'},
+  {k:['consistency','motivation','discipline','lazy','quit','consistent','habit','stick with','procrastin'],t:'Consistency & Discipline',
+   b:["Motivation is unreliable — build systems and a schedule you follow when you don't feel like it.","Lower the activation energy: lay your kit out, fix set training times, remove the decision.","Track it — a streak you can see is a streak you protect. Don't break the chain.","Show up small on bad days; a 20-minute session keeps the identity of 'someone who trains' alive."],
+   drill:null},
+  {k:['southpaw','open stance','lefty','vs southpaw','orthodox vs'],t:'The Open-Stance (Southpaw) Battle',
+   b:["Win the lead-foot battle — keep your front foot outside theirs to own the angle and power line.","The straight rear hand (cross) down the middle is the money punch in open stance.","Lead hook and rear round kick land on the open side; hunt them.","Watch their power hand and rear kick — those are the open-stance knockout shots."],
+   drill:'Footwork drill vs a southpaw partner: constantly fight to step your lead foot outside theirs. 3 rounds.'}
 ];
+function _kbScore(e,t){let s=0;for(const kw of e.k){if(t.includes(kw))s+=kw.length>4?2:1;}return s;}
 function _kbMatch(text){
   const t=(' '+(text||'').toLowerCase()+' ');
   let best=null,bestScore=0;
-  for(const e of COACH_KB){
-    let s=0;for(const kw of e.k){if(t.includes(kw))s+=kw.length>4?2:1;}
-    if(s>bestScore){bestScore=s;best=e;}
-  }
+  for(const e of COACH_KB){const s=_kbScore(e,t);if(s>bestScore){bestScore=s;best=e;}}
   return bestScore>0?best:null;
+}
+// Return up to n KB entries that the question touches, best first.
+function _kbMatchAll(text,n){
+  const t=(' '+(text||'').toLowerCase()+' ');
+  return COACH_KB.map(e=>({e,s:_kbScore(e,t)})).filter(x=>x.s>0)
+    .sort((a,b)=>b.s-a.s).slice(0,n||2).map(x=>x.e);
 }
 function _kbBlock(e){
   let out='## '+e.t+'\n\n'+e.b.map(x=>'- '+x).join('\n');
@@ -2742,28 +2797,68 @@ function _contextLine(){
   const p=S.profile||{};const bits=[];
   if(p.disciplines&&p.disciplines.length)bits.push('you train '+p.disciplines.join(', '));
   if(p.stance)bits.push(p.stance+' stance');
-  if(p.style)bits.push('a '+p.style.toLowerCase()+' style');
+  if(p.style)bits.push((/^[aeiou]/i.test(p.style)?'an ':'a ')+p.style.toLowerCase()+' style');
   const dtf=daysUntil&&S.nextEvent&&S.nextEvent.date?daysUntil(S.nextEvent.date):null;
   if(dtf!=null&&dtf>=0)bits.push(dtf+' days to your next fight');
   return bits.length?('Given that '+bits.join(', ')+', '):'';
 }
-function localChatReply(text){
-  const e=_kbMatch(text);
-  const ctx=_contextLine();
-  if(e){
-    return (ctx?ctx+'here is how I\'d attack this:\n\n':'')+_kbBlock(e)+
-      "\n\n_Want me to go deeper on any one of these, or build it into your week? Just ask._";
-  }
-  // No KB hit → give a structured, genuinely useful general answer from their data.
-  const recent=(S.sessions||[]).slice(0,3);
-  let out="## Coach's Take\n\nGive me a specific area and I'll get technical — striking (jab, cross, hook, kicks, head movement, footwork), wrestling (takedowns, sprawl, clinch), ground (guard, passing, submissions), or camp topics (conditioning, weight cut, mindset, periodisation).";
+// Prioritised "what should I work on" answer, built from the fighter's own profile/log.
+function _improvePlan(ctx){
+  const p=S.profile||{};
+  const disc=(p.disciplines&&p.disciplines.length)?p.disciplines.join(', '):'MMA';
+  const recent=(S.sessions||[]).slice(0,4);
+  let log='';
   if(recent.length){
-    out+="\n\n**From your recent log:** "+recent.map(s=>`${s.type} (${s.duration}min, intensity ${s.intensity||5}/10)`).join(', ')+".";
-    const avgInt=recent.reduce((a,s)=>a+(s.intensity||5),0)/recent.length;
-    if(avgInt>=8)out+=" Your intensity has been high — make sure a recovery/technical day is built in this week so the work sticks.";
-    else if(avgInt<=4)out+=" Intensity's been light — if you're healthy, it may be time to push a hard sparring or conditioning round.";
+    const types=[...new Set(recent.map(s=>s.type))];
+    log="\n\n**Reading your recent log** ("+recent.map(s=>`${s.type} ${s.duration}min`).join(', ')+"): you've been heavy on "+types.slice(0,2).join(' & ')+". The fastest gains usually come from the area you're *avoiding* — be honest about which round you least like to start.";
   }
-  return out+"\n\nAsk me anything — technique, drills, game plans, weight, nerves. I'll keep it direct.";
+  return (ctx?ctx.charAt(0).toUpperCase()+ctx.slice(1):'')+"## What To Work On — In Order\n\n"+
+    "1. **Fundamentals that show up every round** — stance, jab, sprawl, guard retention. Boring, but they win fights.\n"+
+    "2. **Your worst position** — the place you panic (off your back? against the cage? in deep water late?). Drill *that* twice as much as your favourite.\n"+
+    "3. **One signature weapon** — pick a single high-percentage finish or combo and make it world-class. Specialists beat generalists.\n"+
+    "4. **Fight-specific conditioning** — round-based intervals so your skills don't disappear when you're tired."+
+    log+"\n\nTell me which of these stings the most — *off my back, taking damage on the feet, gassing late, freezing under pressure* — and I'll build you a focused week.";
+}
+// Always-useful default for a question that didn't clearly hit the KB.
+function _generalAnswer(raw,ctx){
+  const e=_kbMatch(raw); // weak/any signal
+  const topic=raw.replace(/[`*_#]/g,'').slice(0,120);
+  if(e){
+    return (ctx?ctx+'here\'s the technical answer:\n\n':'')+_kbBlock(e)+
+      "\n\n_That's the closest read on “"+esc(topic)+"”. Want me to go deeper or tie it to a drill? Just ask._";
+  }
+  // No signal at all — give real coaching principles instead of a deflection.
+  return "Here's how I'd approach **“"+esc(topic)+"”**:\n\n"+
+    "- **Break it to one problem** — what *specifically* is going wrong: you're getting hit, you can't land it, you lose the position, or you run out of gas? The fix changes completely with the answer.\n"+
+    "- **Setup beats the technique** — most things fail because of the entry, not the finish. Nail the feint, level change, or grip that comes *before* it.\n"+
+    "- **Drill it isolated, then alive** — slow reps for the mechanics, then add a resisting partner at 50%, then live rounds with it as your only goal.\n"+
+    "- **Pressure-test honestly** — film one round hunting just this, then watch what actually happens versus what you think happens.\n\n"+
+    (ctx?ctx+'tell me the exact moment it breaks down and I\'ll get specific.':'Give me the exact moment it breaks down — “getting countered by the cross”, “can’t finish the double”, “stuck under side control” — and I’ll get technical with cues and a drill.');
+}
+function localChatReply(text){
+  const raw=(text||'').trim();
+  const t=' '+raw.toLowerCase()+' ';
+  const ctx=_contextLine();
+  // Greetings / very short openers
+  if(raw.length<3||/^(\s*)(hi|hey+|hello+|yo+|sup|hiya|howdy|good (morning|afternoon|evening)|what'?s up|wassup|gm|coach)[\s!.?]*$/i.test(raw)){
+    return "I'm in your corner. Tell me what you're working on and I'll get technical — a punch or kick to sharpen, a position you keep losing, an opponent style you're facing, or camp stuff like conditioning, the weight cut, or nerves.\n\n**What do you want to drill first?**";
+  }
+  // Meta / capability questions
+  if(/(what can you|who are you|^help| help$|how does this work|what do you do|what should i ask)/i.test(t)){
+    return "## Your Coach\n\nAsk me anything in your game and I'll give cues, drills, and a plan:\n\n- **Striking** — jab, cross, hooks, uppercuts, overhand, elbows, knees, every kick, head movement, footwork, counters, combinations.\n- **Wrestling** — takedowns, sprawl, clinch, cage work.\n- **Ground** — guard, passing, top control, escapes, every major submission.\n- **Camp** — conditioning, strength, weight cut, nutrition, mindset/nerves, periodisation, recovery.\n\nTry: *“how do I stop getting countered by the cross”*, *“build me a conditioning week”*, or *“what should I work on”*.";
+  }
+  // Multiple KB topics
+  const hits=_kbMatchAll(raw,2);
+  if(hits.length){
+    const head=ctx?ctx+'here\'s how I\'d attack this:\n\n':'';
+    return head+hits.map(_kbBlock).join('\n\n---\n\n')+"\n\n_Want me to go deeper on any of these or build it into your week? Just ask._";
+  }
+  // "What should I work on / how do I improve"
+  if(/(work on|improve|get better|getting better|focus on|priorit|what should i|where do i start|next level|my weakness|weak(est)? (point|area|spot))/i.test(t)){
+    return _improvePlan(ctx);
+  }
+  // Anything else — still answer usefully, never deflect.
+  return _generalAnswer(raw,ctx);
 }
 function localSparBreakdown(text){
   const t=(text||'').toLowerCase();
@@ -2849,8 +2944,68 @@ function localFromMessages(messages,system){
   if(/(sampl\w* frames|frame|video|tape|footage)/i.test(system))return localTapeAdvice(text);
   return localChatReply(text);
 }
+/* ============================================================
+   ON-DEVICE OPEN-SOURCE AI  (WebLLM — runs Llama/Qwen in the browser
+   via WebGPU; no API key, no account, no backend, no data leaves the
+   device). Lazy-loaded only when the user turns it on. Any failure
+   silently falls back to the built-in local coach engine above.
+   ============================================================ */
+const WEBLLM_MODELS=[
+  {id:'Llama-3.2-1B-Instruct-q4f16_1-MLC',name:'Llama 3.2 1B',size:'~0.9 GB',note:'Fastest — light devices'},
+  {id:'Qwen2.5-1.5B-Instruct-q4f16_1-MLC',name:'Qwen2.5 1.5B',size:'~1.1 GB',note:'Balanced'},
+  {id:'Llama-3.2-3B-Instruct-q4f16_1-MLC',name:'Llama 3.2 3B',size:'~2.2 GB',note:'Smartest — best answers'}
+];
+let _webllmLib=null, webllmEngine=null, webllmStatus='idle', webllmProgress={pct:0,text:''};
+function webllmSupported(){try{return typeof navigator!=='undefined'&&!!navigator.gpu;}catch(e){return false;}}
+function localAIOn(){return !!(S.localAI&&S.localAI.enabled);}
+function localAIModelId(){return (S.localAI&&S.localAI.model)||WEBLLM_MODELS[2].id;}
+function localAIModelName(){const m=WEBLLM_MODELS.find(x=>x.id===localAIModelId());return m?m.name:'On-device AI';}
+// Load (download + compile) the chosen model. Heavy + user-initiated.
+async function loadWebLLM(onProgress){
+  if(webllmEngine&&webllmStatus==='ready')return webllmEngine;
+  if(!webllmSupported())throw new Error('This browser has no WebGPU. On-device AI needs desktop Chrome/Edge, or a recent Safari/Chrome on a capable device.');
+  webllmStatus='loading';webllmProgress={pct:0,text:'Starting…'};
+  try{
+    if(!_webllmLib)_webllmLib=await import('https://esm.run/@mlc-ai/web-llm');
+    const model=localAIModelId();
+    webllmEngine=await _webllmLib.CreateMLCEngine(model,{initProgressCallback:(p)=>{
+      webllmProgress={pct:Math.round((p.progress||0)*100),text:p.text||''};
+      if(onProgress)onProgress(webllmProgress);
+    }});
+    webllmStatus='ready';
+    return webllmEngine;
+  }catch(e){webllmStatus='error';webllmEngine=null;throw e;}
+}
+function _webllmMsgs(messages,system){
+  const out=[];
+  if(system)out.push({role:'system',content:String(system)});
+  for(const m of (messages||[])){
+    let c=m.content;
+    if(Array.isArray(c))c=c.filter(b=>b&&b.type==='text').map(b=>b.text).join('\n');
+    out.push({role:m.role==='assistant'?'assistant':'user',content:String(c||'')});
+  }
+  return out;
+}
+async function webllmGenerate(messages,system,maxTokens){
+  const eng=await loadWebLLM();
+  const r=await eng.chat.completions.create({messages:_webllmMsgs(messages,system),temperature:0.6,max_tokens:maxTokens||800});
+  return ((r.choices&&r.choices[0]&&r.choices[0].message&&r.choices[0].message.content)||'').trim();
+}
+async function webllmGenerateStream(messages,system,onChunk,maxTokens){
+  const eng=await loadWebLLM();
+  const stream=await eng.chat.completions.create({messages:_webllmMsgs(messages,system),stream:true,temperature:0.6,max_tokens:maxTokens||800});
+  let full='';
+  for await(const chunk of stream){
+    const d=(chunk.choices&&chunk.choices[0]&&chunk.choices[0].delta&&chunk.choices[0].delta.content)||'';
+    if(d){full+=d;onChunk(d);}
+  }
+  return full.trim();
+}
+// Only route through WebLLM when the model is already loaded & ready.
+function webllmActive(){return localAIOn()&&webllmStatus==='ready'&&!!webllmEngine;}
 /* ---------- API call (non-streaming) ---------- */
 async function callClaude(messages,system,maxTokens=1000){
+  if(webllmActive()){try{const r=await webllmGenerate(messages,system,maxTokens);if(r)return r;}catch(e){/* fall back to local */}}
   if(!aiConfigured())return localFromMessages(messages,system);
   const cfg=await aiRequestConfig();
   const body={model:AI_MODEL,max_tokens:maxTokens,messages};
@@ -2867,6 +3022,10 @@ async function callClaude(messages,system,maxTokens=1000){
 }
 /* ---------- API call (streaming via SSE) ---------- */
 async function callClaudeStream(messages,system,onChunk,maxTokens=1000){
+  if(webllmActive()){
+    try{const r=await webllmGenerateStream(messages,system,onChunk,maxTokens);if(r)return r;}
+    catch(e){/* fall back to local/remote below */}
+  }
   if(!aiConfigured()){
     // Local engine: stream the on-device reply word-by-word so it feels live.
     const full=localFromMessages(messages,system);
@@ -2965,9 +3124,55 @@ function rerenderAICoach(){
   if(aiTab==='chat')scrollChat();
 }
 
+/* ---------- On-device open-source AI banner + controls ---------- */
+function localAIBanner(){
+  if(!webllmSupported()){
+    if(localAIOn()){ if(!S.localAI)S.localAI={}; S.localAI.enabled=false; }
+    return `<div class="card" style="padding:10px 14px;margin-bottom:10px">
+      <div class="fz12 fw6">Coach runs on-device — no setup needed</div>
+      <div class="fz11 muted" style="margin-top:3px">For a fully generative open-source AI brain (Llama/Qwen in your browser), open this on desktop Chrome or Edge — they support WebGPU.</div></div>`;
+  }
+  if(webllmStatus==='ready'&&localAIOn()){
+    return `<div class="card" style="padding:10px 14px;margin-bottom:10px;border-color:rgba(46,204,113,.35);background:rgba(46,204,113,.07)">
+      <div class="between"><div class="row" style="gap:8px"><span style="color:#2ecc71">●</span><span class="fz12 fw6">On-device AI active — ${esc(localAIModelName())}</span></div>
+      <button class="btn sm ghost" onclick="disableLocalAI()" style="flex:0 0 auto">Turn off</button></div>
+      <div class="fz11 muted" style="margin-top:4px">Open-source model running locally in your browser — no account, no key, fully private.</div></div>`;
+  }
+  if(webllmStatus==='loading'){
+    return `<div class="card" style="padding:12px 14px;margin-bottom:10px">
+      <div class="fz12 fw6" style="margin-bottom:6px">Loading on-device AI… ${webllmProgress.pct||0}%</div>
+      <div style="height:6px;background:var(--line);border-radius:6px;overflow:hidden"><div style="height:100%;width:${webllmProgress.pct||0}%;background:var(--gold);transition:width .25s"></div></div>
+      <div class="fz11 muted" style="margin-top:6px">${esc(webllmProgress.text||'Downloading the model — first time only, then it stays cached on this device.')}</div></div>`;
+  }
+  return `<div class="card" style="padding:12px 14px;margin-bottom:10px;border-color:rgba(200,168,75,.35);background:rgba(200,168,75,.05)">
+    <div class="fz12 fw6">⚡ Upgrade to a real on-device AI brain</div>
+    <div class="fz11 muted" style="margin-top:2px">Runs an open-source model (Llama / Qwen) right in your browser — fully generative answers, no account, no API key, completely private. One-time download, then cached.</div>
+    <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">
+      <select class="inp" id="llmModelSel" style="flex:1;min-width:170px" onchange="setLocalAIModel(this.value)">
+        ${WEBLLM_MODELS.map(m=>`<option value="${m.id}" ${m.id===localAIModelId()?'selected':''}>${m.name} · ${m.size} · ${m.note}</option>`).join('')}
+      </select>
+      <button class="btn" onclick="enableLocalAI()" style="flex:0 0 auto">Enable</button>
+    </div></div>`;
+}
+function setLocalAIModel(id){if(!S.localAI)S.localAI={};S.localAI.model=id;save();}
+async function enableLocalAI(){
+  if(!webllmSupported()){toast('This browser has no WebGPU — try desktop Chrome or Edge.','red');return;}
+  if(!S.localAI)S.localAI={};S.localAI.enabled=true;save();
+  rerenderAICoach();
+  let lastPct=-1;
+  try{
+    await loadWebLLM((p)=>{if(p.pct!==lastPct){lastPct=p.pct;if(aiTab==='chat')rerenderAICoach();}});
+    toast('On-device AI ready — ask away','green');
+  }catch(e){
+    if(!S.localAI)S.localAI={};S.localAI.enabled=false;save();
+    toast(friendlyAIError(e),'red');
+  }
+  rerenderAICoach();
+}
+function disableLocalAI(){if(!S.localAI)S.localAI={};S.localAI.enabled=false;save();toast('Back to the built-in coach','gold');rerenderAICoach();}
 /* ---------- COACH CHAT ---------- */
 function aiChatView(){
-  return`<div class="card" style="display:flex;flex-direction:column;height:560px;max-height:70vh;padding:0">
+  return localAIBanner()+`<div class="card" style="display:flex;flex-direction:column;height:560px;max-height:70vh;padding:0">
     <div class="between" style="padding:14px 18px;border-bottom:1px solid var(--line)">
       <div class="row" style="gap:10px"><div class="avatar-init" style="width:36px;height:36px;font-size:15px">AI</div>
         <div><div class="fw6 fz12">Elite Coach</div><div class="fz11 muted">Striking · Wrestling · BJJ · Camp prep</div></div></div>
