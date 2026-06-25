@@ -4386,7 +4386,50 @@ const STRIKES={
   slip:{kt:'0;0.3;0.62;1',ease:EASE_SMOOTH,pose:{
     ease:EASE_SMOOTH,trans:'0 0;-7 5;-7 5;0 0',rot:'0 70 89;-7 70 89;-7 70 89;0 70 89'}},
   pivot:{kt:'0;0.35;0.68;1',ease:EASE_SMOOTH,noOppo:1,pose:{
-    ease:EASE_SMOOTH,trans:'0 0;-3 0;-3 0;0 0',rot:'0 90 134;-18 90 134;-18 90 134;0 90 134'}}
+    ease:EASE_SMOOTH,trans:'0 0;-3 0;-3 0;0 0',rot:'0 90 134;-18 90 134;-18 90 134;0 90 134'}},
+  /* Straight (spear) knee — knee chambers then the hips thrust it forward into the body,
+     both hands clinching/pulling the head down. */
+  knee:{target:[116,80],fx:1,kt:'0;0.28;0.52;1',pose:{
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,92],[86,92],[78,104]],[[68,92],[110,84],[100,102]],[[66,90],[60,112],[54,134]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,55],[92,50],[112,46]],[[73,57],[90,57],[108,62]],[[73,59],[80,54],[86,49]]],
+    rearArm:[[[66,59],[72,55],[78,50]],[[66,56],[86,52],[106,49]],[[66,58],[86,58],[104,64]],[[66,59],[72,55],[78,50]]],
+    trans:'0 0;4 -1;10 2;0 0',rot:'0 70 100;3 70 100;9 70 100;0 70 100'}},
+  /* Horizontal elbow — the forearm folds tight to the head and the point of the elbow
+     whips across on hip/shoulder rotation. */
+  elbow:{target:[122,50],fx:1,kt:'0;0.24;0.44;1',pose:{
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,58],[70,49],[80,55]],[[73,57],[112,52],[95,57]],[[73,59],[80,54],[86,49]]],
+    rot:'0 70 89;-4 70 89;11 70 89;0 70 89'}},
+  /* Spinning back elbow — wind away, spin through, the rear elbow lands on the turn. */
+  spinelbow:{target:[126,50],fx:1,kt:'0;0.34;0.56;1',pose:{
+    rearArm:[[[66,59],[72,55],[78,50]],[[66,58],[60,52],[70,58]],[[68,57],[110,54],[92,60]],[[66,59],[72,55],[78,50]]],
+    rot:'0 70 100;-30 70 100;14 70 100;0 70 100',trans:'0 0;-2 0;5 0;0 0'}},
+  /* Spinning back kick — chamber the knee, spot the target, drive the heel straight back. */
+  spinkick:{target:[128,74],fx:1,kt:'0;0.3;0.52;1',pose:{
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,92],[78,96],[72,112]],[[68,92],[98,84],[124,78]],[[66,90],[60,112],[54,134]]],
+    rot:'0 70 100;-26 70 100;8 70 100;0 70 100',trans:'0 0;-2 0;6 0;0 0'}},
+  /* Roundhouse to the body — support foot turns over, shin swings up into the ribs. */
+  bodykick:{target:[128,66],fx:1,kt:'0;0.22;0.42;1',pose:{
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,88],[58,104],[50,120]],[[68,90],[96,78],[124,68]],[[66,90],[60,112],[54,134]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,56],[79,49],[83,44]],[[73,61],[67,73],[58,83]],[[73,59],[80,54],[86,49]]],
+    rot:'0 90 134;-5 90 134;16 90 134;0 90 134'}},
+  /* Head kick — same roundhouse mechanics, full hip turn, shin to the head. */
+  headkick:{target:[132,44],fx:1,kt:'0;0.22;0.42;1',pose:{
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,88],[58,104],[50,120]],[[70,90],[100,66],[128,44]],[[66,90],[60,112],[54,134]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,56],[79,49],[83,44]],[[73,61],[67,73],[58,83]],[[73,59],[80,54],[86,49]]],
+    rot:'0 90 134;-6 90 134;20 90 134;0 90 134'}},
+  /* Calf kick — short, low roundhouse landing on the meat of the calf. */
+  calfkick:{target:[120,130],fx:1,kt:'0;0.22;0.42;1',pose:{
+    rearLeg:[[[66,90],[60,112],[54,134]],[[66,90],[57,107],[49,127]],[[68,93],[92,118],[120,130]],[[66,90],[60,112],[54,134]]],
+    leadArm:[[[73,59],[80,54],[86,49]],[[73,56],[79,49],[83,44]],[[73,61],[67,71],[59,80]],[[73,59],[80,54],[86,49]]],
+    rot:'0 90 134;-4 90 134;13 90 134;0 90 134'}},
+  /* Oblique kick — push-stomp the lead leg into the opponent's thigh/knee. */
+  obliquekick:{target:[126,104],fx:1,kt:'0;0.22;0.42;1',pose:{
+    leadLeg:[[[74,90],[83,112],[90,134]],[[73,91],[84,103],[88,108]],[[73,92],[98,100],[124,104]],[[74,90],[83,112],[90,134]]],
+    rot:'0 54 120;-4 54 120;-6 54 120;0 54 120'}},
+  /* Switch kick — quick foot switch then the lead leg roundhouses to the body. */
+  switchkick:{target:[128,68],fx:1,kt:'0;0.22;0.42;1',pose:{
+    leadLeg:[[[74,90],[83,112],[90,134]],[[74,90],[80,108],[76,120]],[[74,90],[100,80],[126,68]],[[74,90],[83,112],[90,134]]],
+    rot:'0 90 134;3 90 134;14 90 134;0 90 134'}}
 };
 function _oppoBack(){
   return `<g class="oppo">
@@ -4413,6 +4456,7 @@ function fighterSVG(tech){
   tech=tech||'guard';
   if(tech==='guard') return guardSceneSVG();
   if(tech==='shot'||tech==='sprawl') return grappleSceneSVG(tech);
+  if(GROUND_SCENES[tech]) return groundSceneSVG(tech);
   const cfg=STRIKES[tech]||STRIKES.jab;
   const dur=cfg.dur||1.5,kt=cfg.kt||KT,ease=cfg.ease||EASE;
   const pose=Object.assign({dur,kt,ease},cfg.pose);
@@ -4496,6 +4540,133 @@ function grappleSceneSVG(tech){
     ${standFighter(pose)}
   </svg>`;
 }
+/* Distinct ground positions so submissions no longer all share the closed-guard loop.
+   Each is a stylised but anatomically-placed two-figure scene with a subtle finishing loop. */
+const GROUND_SCENES={triangle:1,armbar:1,rnc:1,mount:1,side:1,kneebelly:1};
+function groundSceneSVG(kind){
+  const dur=2.0,kt='0;0.42;0.62;1',sp=EASE_SMOOTH;
+  const label={triangle:'triangle choke',armbar:'armbar',rnc:'rear-naked choke',mount:'mount control',side:'side control',kneebelly:'knee-on-belly'}[kind]||'ground control';
+  const _sq=(tx,ty)=>`<animateTransform attributeName="transform" type="translate" dur="${dur}s" repeatCount="indefinite" calcMode="spline" keyTimes="${kt}" values="0 0;${tx} ${ty};${tx} ${ty};0 0" keySplines="${sp}"/>`;
+  let body='';
+  if(kind==='triangle'){
+    // You on your back (head left), legs figure-4 around the opponent's neck + one arm, pulling the head down.
+    body=`<ellipse class="t-shadow" cx="96" cy="135" rx="64" ry="6"/>
+    <g class="oppo">${_sq(0,6)}
+      <circle class="o-head" cx="120" cy="80" r="10"/>
+      <path class="o-body" d="M116,90 C117,105 123,118 131,126 L143,121 C137,108 134,95 130,86 C126,84 119,86 116,90 Z"/>
+      <path class="o-arm" d="M122,84 Q116,70 112,55"/>
+      <path class="o-leg" d="M133,123 L151,129"/>
+    </g>
+    <g class="gbot">${_sq(-3,-6)}
+      <circle class="gb-head" cx="40" cy="121" r="10"/>
+      <path class="gb-torso" d="M46,115 C44,121 46,127 52,129 L86,123 C90,120 90,113 84,111 C70,109 54,110 46,115 Z"/>
+      <path class="gb-leg" d="M86,116 Q108,96 124,72 Q133,60 121,52"/>
+      <path class="gb-leg" d="M88,124 Q112,118 129,98 Q141,84 126,72"/>
+      <g class="gb-pull">${_sq(-3,4)}
+        <path class="gb-arm" d="M54,117 Q86,96 116,72"/>
+        <circle class="gb-grip" cx="116" cy="72" r="4"/>
+      </g>
+    </g>`;
+  } else if(kind==='armbar'){
+    // You perpendicular on your back, hips into the elbow, their arm extended straight up between your thighs.
+    body=`<ellipse class="t-shadow" cx="100" cy="135" rx="66" ry="6"/>
+    <g class="oppo">
+      <circle class="o-head" cx="152" cy="120" r="10"/>
+      <path class="o-body" d="M122,114 C130,112 142,113 146,118 L143,128 C134,128 124,126 119,122 C118,118 119,115 122,114 Z"/>
+      <path class="o-arm" d="M126,108 Q121,84 117,60"/>
+      <path class="o-leg" d="M140,126 L158,134"/>
+    </g>
+    <g class="gbot">${_sq(0,-5)}
+      <circle class="gb-head" cx="52" cy="124" r="10"/>
+      <path class="gb-torso" d="M58,118 C56,124 58,130 64,131 L92,126 C96,123 95,116 90,114 C76,113 66,114 58,118 Z"/>
+      <path class="gb-leg" d="M90,118 Q110,100 124,84 Q132,75 126,66"/>
+      <path class="gb-leg" d="M92,126 Q112,114 126,102 Q136,93 130,82"/>
+      <g class="gb-pull">${_sq(0,-4)}
+        <path class="gb-arm" d="M70,120 Q96,90 116,62"/>
+        <circle class="gb-grip" cx="116" cy="62" r="4"/>
+      </g>
+    </g>`;
+  } else if(kind==='rnc'){
+    // Back control: you behind, both hooks in, the choking forearm across the throat — squeeze on the loop.
+    body=`<ellipse class="t-shadow" cx="118" cy="135" rx="58" ry="6"/>
+    <g class="oppo">${_sq(-2,2)}
+      <circle class="o-head" cx="120" cy="72" r="10"/>
+      <path class="o-body" d="M112,82 C110,98 112,112 116,120 L130,118 C132,108 132,94 130,82 C125,78 117,78 112,82 Z"/>
+      <path class="o-leg" d="M120,118 L148,126"/>
+      <path class="o-leg" d="M122,122 L150,132"/>
+      <path class="o-arm" d="M114,88 Q104,96 96,104"/>
+    </g>
+    <g class="gbot">${_sq(-2,-2)}
+      <circle class="gb-head" cx="98" cy="62" r="10"/>
+      <path class="gb-torso" d="M88,74 C86,90 88,104 92,114 L104,112 C107,102 107,88 104,74 C100,70 92,70 88,74 Z"/>
+      <path class="gb-leg" d="M98,108 Q124,110 140,114"/>
+      <path class="gb-leg" d="M100,116 Q126,118 142,122"/>
+      <g class="gb-pull">${_sq(-4,1)}
+        <path class="gb-arm" d="M96,72 Q110,70 124,74 Q116,84 108,88"/>
+        <circle class="gb-grip" cx="108" cy="88" r="4"/>
+      </g>
+    </g>`;
+  } else if(kind==='mount'){
+    // Opponent flat on their back, you sitting tall on the chest, posture up to strike.
+    body=`<ellipse class="t-shadow" cx="96" cy="135" rx="70" ry="6"/>
+    <g class="oppo">
+      <circle class="o-head" cx="42" cy="120" r="10"/>
+      <path class="o-body" d="M52,114 C68,112 92,112 112,116 L112,126 C92,130 68,130 52,128 C49,124 49,117 52,114 Z"/>
+      <path class="o-leg" d="M110,118 L142,124"/>
+      <path class="o-leg" d="M110,126 L142,132"/>
+      <path class="o-arm" d="M70,116 Q76,104 80,94"/>
+    </g>
+    <g class="gbot">${_sq(2,2)}
+      <circle class="gb-head" cx="94" cy="62" r="10"/>
+      <path class="gb-torso" d="M86,72 C84,86 86,100 90,110 L102,110 C105,100 105,86 102,72 C98,68 90,68 86,72 Z"/>
+      <path class="gb-leg" d="M88,106 Q80,116 74,124"/>
+      <path class="gb-leg" d="M100,106 Q110,116 116,124"/>
+      <g class="gb-pull">${_sq(4,-3)}
+        <path class="gb-arm" d="M92,74 Q100,66 108,60"/>
+        <circle class="gb-grip" cx="108" cy="60" r="5"/>
+      </g>
+      <path class="gb-arm" d="M90,80 Q82,84 76,90"/>
+    </g>`;
+  } else if(kind==='side'){
+    // Opponent flat, you chest-to-chest perpendicular across them with a cross-face and underhook.
+    body=`<ellipse class="t-shadow" cx="100" cy="135" rx="72" ry="6"/>
+    <g class="oppo">
+      <circle class="o-head" cx="42" cy="120" r="10"/>
+      <path class="o-body" d="M52,114 C72,112 96,112 116,116 L116,126 C96,130 72,130 52,128 C49,124 49,117 52,114 Z"/>
+      <path class="o-leg" d="M114,118 L146,124"/>
+      <path class="o-leg" d="M114,126 L146,132"/>
+    </g>
+    <g class="gbot">${_sq(-2,2)}
+      <circle class="gb-head" cx="106" cy="86" r="10"/>
+      <path class="gb-torso" d="M70,118 C78,108 92,98 100,92 L108,98 C100,108 88,118 80,124 C75,124 70,122 70,118 Z"/>
+      <path class="gb-leg" d="M98,104 Q124,114 150,120"/>
+      <path class="gb-leg" d="M100,110 Q126,122 152,128"/>
+      <g class="gb-pull">${_sq(-3,0)}
+        <path class="gb-arm" d="M80,114 Q64,108 50,104"/>
+        <circle class="gb-grip" cx="50" cy="104" r="4"/>
+      </g>
+      <path class="gb-arm" d="M88,112 Q72,116 60,122"/>
+    </g>`;
+  } else { // kneebelly
+    // Opponent flat, you posted tall with one knee driving into the belly, far foot posted wide.
+    body=`<ellipse class="t-shadow" cx="92" cy="135" rx="70" ry="6"/>
+    <g class="oppo">
+      <circle class="o-head" cx="42" cy="120" r="10"/>
+      <path class="o-body" d="M52,114 C68,112 90,112 108,116 L108,126 C90,130 68,130 52,128 C49,124 49,117 52,114 Z"/>
+      <path class="o-leg" d="M106,118 L138,124"/>
+      <path class="o-arm" d="M72,116 Q80,108 86,100"/>
+    </g>
+    <g class="gbot">${_sq(0,3)}
+      <circle class="gb-head" cx="96" cy="58" r="10"/>
+      <path class="gb-torso" d="M88,68 C86,80 88,92 92,100 L104,100 C107,92 107,80 104,68 C100,64 92,64 88,68 Z"/>
+      <path class="gb-leg" d="M94,96 Q90,108 84,118"/>
+      <path class="gb-leg" d="M100,96 Q116,110 128,126"/>
+      <path class="gb-arm" d="M90,72 Q80,80 72,86"/>
+      <path class="gb-arm" d="M100,72 Q110,80 118,86"/>
+    </g>`;
+  }
+  return `<svg class="tdemo tg-${kind}" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Animated ${label} demonstration">${FLOOR_SVG}${body}</svg>`;
+}
 /* ===== VAST TECHNIQUE & SKILLS LIBRARY (per martial art) ===== */
 const TECH_LIBRARY=[
   {art:'Boxing',color:'#e63946',items:[
@@ -4522,16 +4693,16 @@ const TECH_LIBRARY=[
   {art:'Muay Thai',color:'#f4a300',items:[
     {n:'Teep (Push Kick)',lvl:'Fundamental',tech:'teep',vid:'7rlAj7pyvnE',author:'Muay Thai Guy',cues:['Knee up first, then extend — push, don\'t swing.','Use it to manage distance and break rhythm.','Recover the foot straight back to stance.']},
     {n:'Low Kick (Roundhouse)',lvl:'Fundamental',tech:'lowkick',vid:'p_vllZaSf_E',author:'Ben Hinson',cues:['Turn the support foot over fully — land with the shin.','Throw through the target, a foot past the leg.','Hide it behind your hands.']},
-    {n:'Body Kick',lvl:'Intermediate',tech:'lowkick',cues:['Same mechanics as the low kick, aimed at the floating ribs.','Swing the arm down for torque and balance.','Step out at ~45° to load the hip.']},
-    {n:'Head Kick',lvl:'Advanced',tech:'lowkick',cues:['Set it up — low kicks first to lower their guard.','Full hip rotation; the shin is the blade.','Disguise it behind your hands up top.']},
+    {n:'Body Kick',lvl:'Intermediate',tech:'bodykick',cues:['Same mechanics as the low kick, aimed at the floating ribs.','Swing the arm down for torque and balance.','Step out at ~45° to load the hip.']},
+    {n:'Head Kick',lvl:'Advanced',tech:'headkick',cues:['Set it up — low kicks first to lower their guard.','Full hip rotation; the shin is the blade.','Disguise it behind your hands up top.']},
     {n:'Switch Kick',lvl:'Intermediate',cues:['Quick switch of the feet to power the lead-leg kick.','Keep the switch small and fast so it doesn\'t telegraph.']},
     {n:'Horizontal & Diagonal Elbows',lvl:'Intermediate',cues:['Short range — turn the body, point of the elbow cuts.','Best off a clinch break or as they close in.']},
     {n:'Straight Knee',lvl:'Fundamental',cues:['Point the toe down, drive the hip through.','Pull on the head/neck to meet the knee.']},
     {n:'Clinch Knees & Elbows',lvl:'Intermediate',vid:'jxVkQ2UWzmE',author:'TAG Muay Thai',cues:['Win the inside — double collar tie (plum).','Break posture and off-balance before you knee.','Pummel constantly; never let them settle.']},
     {n:'Checking the Low Kick',lvl:'Fundamental',tech:'lowkick',cues:['Lift the knee, point the shin at the incoming kick.','Check with the bony shin, not the calf.','Return fire immediately after the check.']},
     {n:'Lead Teep to the Face',lvl:'Intermediate',tech:'teep',cues:['Snap the lead leg up the centre to disrupt rhythm.','Great as a stop-hit on a pressuring opponent.','Recover the foot fast so you\'re not caught on one leg.']},
-    {n:'Spinning Back Elbow',lvl:'Advanced',tech:'hook',cues:['Turn off a missed cross or to switch direction.','Spot the target over your shoulder before you spin.','Compact and fast — don\'t telegraph the turn.']},
-    {n:'Spinning Back Kick',lvl:'Advanced',tech:'teep',cues:['Drive the heel straight back into the body.','Look over the shoulder, kick on a straight line.','Devastating counter to a charging opponent.']},
+    {n:'Spinning Back Elbow',lvl:'Advanced',tech:'spinelbow',cues:['Turn off a missed cross or to switch direction.','Spot the target over your shoulder before you spin.','Compact and fast — don\'t telegraph the turn.']},
+    {n:'Spinning Back Kick',lvl:'Advanced',tech:'spinkick',cues:['Drive the heel straight back into the body.','Look over the shoulder, kick on a straight line.','Devastating counter to a charging opponent.']},
     {n:'Catch & Sweep',lvl:'Intermediate',tech:'sprawl',cues:['Catch the body kick against your ribs and arm.','Step in and sweep the support leg as they\'re on one foot.','Stay tight so they can\'t spin out.']},
     {n:'Teep Defense',lvl:'Fundamental',tech:'slip',cues:['Parry the push kick down and across with the lead hand.','Or pivot off-line so it slides past.','Counter into the space they just opened.']},
     {n:'Clinch Entry off the Kick',lvl:'Intermediate',tech:'teep',cues:['Block or catch the kick, then close into the plum.','Establish double collar tie before they posture.','Once inside, knees and off-balancing take over.']},
@@ -4557,25 +4728,25 @@ const TECH_LIBRARY=[
   ]},
   {art:'BJJ / Grappling',color:'#4361ee',items:[
     {n:'Closed Guard Basics',lvl:'Fundamental',tech:'guard',cues:['Break their posture down constantly.','Always threaten a sweep, a sub, and a stand-up.','Control the wrists and one sleeve/collar.']},
-    {n:'Triangle Choke',lvl:'Intermediate',vid:'Er9fHtsYw9U',author:'Foley Academy',cues:['Control posture, cut the angle — don\'t squeeze straight on.','Lock the legs and pull the head down.','Hide the far arm across the body.']},
-    {n:'Armbar from Guard',lvl:'Intermediate',cues:['Pinch the knees, control the wrist to your chest.','Hips high, slow and tight to finish.','Angle off before you extend.']},
-    {n:'Armbar Escape',lvl:'Intermediate',vid:'vewy9Zz4GZM',author:'Cole Combat Science',cues:['Hide the elbow and stack early before it\'s locked.','Hitchhiker escape or spin into their hips.','Don\'t panic — protect the elbow first.']},
-    {n:'Guard Passing',lvl:'Intermediate',vid:'eUh6Q2K-mbs',author:'Ritchie Yip',cues:['Kill the hips, stay chest-to-chest.','Pressure pass or speed pass — commit fully.','Re-pin every time they create space.']},
-    {n:'Taking the Back',lvl:'Advanced',vid:'f6as17yUw2g',author:'Chewjitsu',cues:['Get both hooks and the seatbelt grip.','Keep your chest glued to their back.','Stay on the back as they scramble.']},
-    {n:'Rear Naked Choke',lvl:'Fundamental',vid:'KW2RvtWgBxU',author:'Matt Arroyo',cues:['Cut the angle, get the seatbelt.','Fight one hand at a time to the neck.','No-gi: blade the forearm under the chin.']},
-    {n:'Mount Control & Attacks',lvl:'Intermediate',cues:['Climb high and trap an arm.','Stay heavy; re-mount every escape attempt.','Hunt the armbar or collar choke from the top.']},
-    {n:'Side Control',lvl:'Fundamental',cues:['Heavy cross-face and underhook to pin.','Kill the near-side hip to stop the shrimp.','Transition to mount or attack the far arm.']},
-    {n:'Kimura',lvl:'Intermediate',cues:['Figure-four the wrist and elbow.','Keep the arm bent at 90°, rotate behind the back.','Trap the body so they can\'t roll out.']},
+    {n:'Triangle Choke',lvl:'Intermediate',tech:'triangle',vid:'Er9fHtsYw9U',author:'Foley Academy',cues:['Control posture, cut the angle — don\'t squeeze straight on.','One arm in, one arm out; their own shoulder does the choking.','Ankle behind the knee (figure-4), then pull the head down.']},
+    {n:'Armbar from Guard',lvl:'Intermediate',tech:'armbar',cues:['Pinch the knees, control the wrist to your chest.','Hips high, slow and tight to finish.','Angle off before you extend.']},
+    {n:'Armbar Escape',lvl:'Intermediate',tech:'armbar',vid:'vewy9Zz4GZM',author:'Cole Combat Science',cues:['Hide the elbow and stack early before it\'s locked.','Hitchhiker escape or spin into their hips.','Don\'t panic — protect the elbow first.']},
+    {n:'Guard Passing',lvl:'Intermediate',tech:'guard',vid:'eUh6Q2K-mbs',author:'Ritchie Yip',cues:['Kill the hips, stay chest-to-chest.','Pressure pass or speed pass — commit fully.','Re-pin every time they create space.']},
+    {n:'Taking the Back',lvl:'Advanced',tech:'rnc',vid:'f6as17yUw2g',author:'Chewjitsu',cues:['Get both hooks and the seatbelt grip.','Keep your chest glued to their back.','Stay on the back as they scramble.']},
+    {n:'Rear Naked Choke',lvl:'Fundamental',tech:'rnc',vid:'KW2RvtWgBxU',author:'Matt Arroyo',cues:['Cut the angle, get the seatbelt.','Fight one hand at a time to the neck.','No-gi: blade the forearm under the chin.']},
+    {n:'Mount Control & Attacks',lvl:'Intermediate',tech:'mount',cues:['Climb high and trap an arm.','Stay heavy; re-mount every escape attempt.','Hunt the armbar or collar choke from the top.']},
+    {n:'Side Control',lvl:'Fundamental',tech:'side',cues:['Heavy cross-face and underhook to pin.','Kill the near-side hip to stop the shrimp.','Transition to mount or attack the far arm.']},
+    {n:'Kimura',lvl:'Intermediate',tech:'side',cues:['Figure-four the wrist and elbow.','Keep the arm bent at 90°, rotate behind the back.','Trap the body so they can\'t roll out.']},
     {n:'Guillotine Choke',lvl:'Intermediate',cues:['Wrap high under the chin, not the throat.','Close the guard and arch to finish.','Great off a sprawl on a sloppy shot.']},
     {n:'Hip Escape (Shrimp)',lvl:'Fundamental',tech:'guard',cues:['Frame, bridge, and shrimp your hips away.','Create the space to recover guard or stand.','The single most important escape movement.']},
     {n:'Half Guard',lvl:'Intermediate',tech:'guard',cues:['Get to your side and win the underhook.','Knee shield to create the frame and space.','From here, sweep, take the back, or recover full guard.']},
     {n:'Butterfly Guard & Hook Sweep',lvl:'Intermediate',tech:'guard',cues:['Hooks under their thighs, posture over your feet.','Load them onto a hook and lift to sweep.','Underhook and head control finish the elevation.']},
     {n:'De La Riva Guard',lvl:'Advanced',tech:'guard',cues:['Wrap the DLR hook deep around the lead leg.','Control the ankle/sleeve to off-balance.','Berimbolo, sweeps, or back-takes all flow from here.']},
     {n:'Scissor Sweep',lvl:'Fundamental',tech:'guard',cues:['Collar and sleeve grip, get on your side.','Chop the bottom leg, lift with the shin across the belly.','Come up directly into mount.']},
-    {n:'Americana (Keylock)',lvl:'Fundamental',cues:['From mount/side: paint the brush, pin the wrist.','Figure-four and lift the elbow off the mat.','Keep the wrist low and the elbow tight to your body.']},
-    {n:'Bow & Arrow Choke',lvl:'Advanced',cues:['Deep collar grip from the back.','Trap the near leg, stretch them like drawing a bow.','One of the highest-percentage chokes in the gi.']},
-    {n:'Back Escape',lvl:'Fundamental',cues:['Protect the neck — two hands fight one.','Slide the hips to the mat, pin a hook, then turn in.','Never let them get the seatbelt re-set.']},
-    {n:'Knee-on-Belly',lvl:'Intermediate',cues:['Drive the knee across the belly, post the other foot wide.','Stay tall and mobile — heavy and light at once.','Attack the far arm or step over to mount.']},
+    {n:'Americana (Keylock)',lvl:'Fundamental',tech:'side',cues:['From mount/side: paint the brush, pin the wrist.','Figure-four and lift the elbow off the mat.','Keep the wrist low and the elbow tight to your body.']},
+    {n:'Bow & Arrow Choke',lvl:'Advanced',tech:'rnc',cues:['Deep collar grip from the back.','Trap the near leg, stretch them like drawing a bow.','One of the highest-percentage chokes in the gi.']},
+    {n:'Back Escape',lvl:'Fundamental',tech:'rnc',cues:['Protect the neck — two hands fight one.','Slide the hips to the mat, pin a hook, then turn in.','Never let them get the seatbelt re-set.']},
+    {n:'Knee-on-Belly',lvl:'Intermediate',tech:'kneebelly',cues:['Drive the knee across the belly, post the other foot wide.','Stay tall and mobile — heavy and light at once.','Attack the far arm or step over to mount.']},
     {n:'Omoplata',lvl:'Advanced',tech:'guard',cues:['Swing the leg over the shoulder, control the hips.','Sit up and walk to the angle to lock the shoulder.','Threatens sweeps and the triangle simultaneously.']},
     {n:'Berimbolo',lvl:'Advanced',tech:'guard',cues:['Invert off De La Riva and crawl to the back.','Control the belt-line and hips throughout.','Land on the back, get the second hook, then attack.']},
     {n:'Leg-Lock Entries (Ashi Garami)',lvl:'Advanced',cues:['Establish the ashi/saddle position before attacking.','Control the hip line to stop them from spinning out.','Stay tight, finish slow — leg locks are dangerous to drill.']}
@@ -4587,8 +4758,8 @@ const TECH_LIBRARY=[
     {n:'Sprawl-and-Brawl',lvl:'Advanced',tech:'sprawl',cues:['Stuff shots and make them pay on the way out.','Keep the fight standing where you\'re strongest.','Frame, circle, and reset to range.']},
     {n:'Technical Stand-Up',lvl:'Fundamental',cues:['Post on one hand and the opposite foot.','Keep a frame up to block strikes as you rise.','Never turn your back getting up.']},
     {n:'Dirty Boxing in the Clinch',lvl:'Intermediate',tech:'hook',cues:['Control the head with one hand, strike with the other.','Short hooks and uppercuts inside the clinch.','Use it to set up takedowns or create space.']},
-    {n:'Calf Kick',lvl:'Intermediate',tech:'lowkick',cues:['Land low on the meat of the calf with the shin.','Compounds fast — destroys mobility over a fight.','Throw it when their lead leg is loaded.']},
-    {n:'Oblique Kick',lvl:'Advanced',tech:'teep',cues:['Stomp the kick into the knee/thigh to stop forward pressure.','Manages distance and damages the lead leg.','Keep it disguised behind hand feints.']},
+    {n:'Calf Kick',lvl:'Intermediate',tech:'calfkick',cues:['Land low on the meat of the calf with the shin.','Compounds fast — destroys mobility over a fight.','Throw it when their lead leg is loaded.']},
+    {n:'Oblique Kick',lvl:'Advanced',tech:'obliquekick',cues:['Stomp the kick into the knee/thigh to stop forward pressure.','Manages distance and damages the lead leg.','Keep it disguised behind hand feints.']},
     {n:'Wall Walking / Wrestle-Up',lvl:'Advanced',tech:'guard',cues:['Use the cage to climb back to your feet off your back.','Frame, post a foot on the cage, and stand into underhooks.','Hand-fight the head before you commit to standing.']},
     {n:'Switching Stances',lvl:'Advanced',tech:'pivot',cues:['Switch to open new angles and weapons.','Square up only for the instant of the switch.','Southpaw-orthodox switches scramble their reads.']},
     {n:'Intercepting the Shot',lvl:'Advanced',tech:'sprawl',cues:['Meet the takedown with a knee or uppercut on the level change.','Sprawl, frame the head, and circle out.','Make every shot cost them.']},
@@ -4611,13 +4782,13 @@ const DEMO_FALLBACK={
   // Boxing
   'Rear Hook':'hook','Uppercut':'uppercut','Overhand':'overhand','Body Punching':'hook','Shoulder Roll & Defense':'slip',
   // Muay Thai
-  'Switch Kick':'lowkick','Horizontal & Diagonal Elbows':'hook','Straight Knee':'teep','Clinch Knees & Elbows':'teep','Diagonal Knee (Diagonal Up-Knee)':'teep','Long Knee':'teep',
+  'Switch Kick':'switchkick','Horizontal & Diagonal Elbows':'elbow','Straight Knee':'knee','Clinch Knees & Elbows':'knee','Diagonal Knee (Diagonal Up-Knee)':'knee','Long Knee':'knee',
   // Wrestling
   'Stance & Level Change':'shot','Whizzer & Underhooks':'sprawl','Body Lock':'shot','Snap Down & Front Headlock':'sprawl','Russian Tie (2-on-1)':'shot','Front Headlock Series':'sprawl',
   // BJJ / Grappling — all ground positions use the closed-guard ground scene
   'Triangle Choke':'guard','Armbar from Guard':'guard','Armbar Escape':'guard','Guard Passing':'guard','Taking the Back':'guard','Rear Naked Choke':'guard','Mount Control & Attacks':'guard','Side Control':'guard','Kimura':'guard','Guillotine Choke':'guard','Americana (Keylock)':'guard','Bow & Arrow Choke':'guard','Back Escape':'guard','Knee-on-Belly':'guard','Leg-Lock Entries (Ashi Garami)':'guard',
   // MMA
-  'Cage Wrestling':'shot','Ground & Pound':'guard','Technical Stand-Up':'guard','Fight IQ & Game Planning':'pivot'
+  'Cage Wrestling':'shot','Ground & Pound':'mount','Technical Stand-Up':'guard','Fight IQ & Game Planning':'pivot'
 };
 function demoTech(it){
   if(it&&it.tech) return it.tech;
