@@ -6752,18 +6752,37 @@ function initPWA(){
   // install prompt
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_deferredPrompt=e;showInstallChip();});
   window.addEventListener('appinstalled',()=>{_deferredPrompt=null;const c=$('#installChip');if(c)c.remove();toast('OCTAGON installed','green');});
-  // service worker for offline app shell (only over http/https; no-op on file://)
+  // service worker for offline app shell + RELIABLE auto-update (http/https only).
+  // (The old build registered the worker from a blob: URL, which Chrome rejects and
+  //  which can never self-update — leaving users stuck on a stale cached app. We now
+  //  register a real same-origin sw.js that is strictly network-first, and we actively
+  //  purge any stale/blob workers + old caches so nobody gets pinned to an old version.)
   if('serviceWorker'in navigator&&location.protocol.startsWith('http')){
-    const swSrc=`const C='octagon-v3';const ASSETS=[self.registration.scope];
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(ASSETS).catch(()=>{})));});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
-/* network-first: always fetch the freshest app when online, fall back to cache offline */
-self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;
-  e.respondWith(fetch(r).then(res=>{const cp=res.clone();caches.open(C).then(c=>{try{c.put(r,cp);}catch(_){}});return res;}).catch(()=>caches.match(r)));});`;
-    try{
-      const swUrl=URL.createObjectURL(new Blob([swSrc],{type:'text/javascript'}));
-      navigator.serviceWorker.register(swUrl).catch(()=>{/* blob SW unsupported here — degrade silently */});
-    }catch(e){}
+    // When a new version takes control, reload once so the user is never left on stale code.
+    let _swRefreshing=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(_swRefreshing)return;_swRefreshing=true;try{location.reload();}catch(_){}
+    });
+    (async()=>{
+      try{
+        // 1) Remove leftover workers from older builds (blob workers, or anything not our sw.js).
+        const regs=await navigator.serviceWorker.getRegistrations();
+        for(const reg of regs){
+          const u=(reg.active&&reg.active.scriptURL)||(reg.waiting&&reg.waiting.scriptURL)||(reg.installing&&reg.installing.scriptURL)||'';
+          if(!u||u.startsWith('blob:')||!/\/sw\.js$/.test(u)){try{await reg.unregister();}catch(_){}}
+        }
+      }catch(_){}
+      try{
+        // 2) One-time cache purge when the build changes (belt-and-suspenders vs. stale HTML).
+        const BUILD='2026-06-25c';
+        if(localStorage.getItem('octagon_build')!==BUILD){
+          if('caches'in window){const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));}
+          localStorage.setItem('octagon_build',BUILD);
+        }
+      }catch(_){}
+      // 3) Register the real, self-updating worker.
+      try{await navigator.serviceWorker.register('sw.js',{scope:'./'});}catch(_){/* degrade silently */}
+    })();
   }
 }
 function showInstallChip(){
