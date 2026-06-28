@@ -173,6 +173,26 @@ a{color:var(--gold);text-decoration:none}
 .install-chip svg{width:16px;height:16px}
 .install-chip:hover{filter:brightness(1.08);transform:translateY(-2px);transition:transform .15s,filter .15s}
 @media(max-width:760px){.install-chip{bottom:74px}}
+/* launch splash (prevents iOS standalone white flash) */
+#splash{position:fixed;inset:0;z-index:9999;background:#0A0A0A;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:16px;transition:opacity .35s ease}
+#splash svg{width:64px;height:72px;animation:splashPulse 1.6s ease-in-out infinite}
+#splash .splash-nm{font-family:var(--font-mono,monospace);letter-spacing:.18em;font-size:18px;color:#C8A84B;font-weight:600}
+#splash .splash-nm b{color:#fff}
+#splash.hide{opacity:0;pointer-events:none}
+@keyframes splashPulse{0%,100%{opacity:.55;transform:scale(.97)}50%{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){#splash svg{animation:none}}
+/* iOS "Add to Home Screen" instructional banner */
+.ios-install{position:fixed;left:12px;right:12px;bottom:12px;z-index:62;display:flex;align-items:center;gap:12px;
+  padding:12px 14px;background:rgba(20,20,22,.96);border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5);backdrop-filter:blur(8px);animation:pop .35s cubic-bezier(.2,.7,.2,1) both}
+.ios-install .ii-icon{flex:0 0 auto;width:38px;height:38px;border-radius:9px;display:grid;place-items:center;background:#0A0A0A;border:1px solid var(--gold)}
+.ios-install .ii-icon svg{width:22px;height:24px}
+.ios-install .ii-txt{flex:1;min-width:0;font-size:12.5px;line-height:1.4;color:var(--txt)}
+.ios-install .ii-txt b{color:var(--gold)}
+.ios-install .ii-share{display:inline-flex;width:16px;height:16px;vertical-align:-3px;color:#4ea3ff}
+.ios-install .ii-x{flex:0 0 auto;background:none;border:0;color:var(--muted);font-size:20px;line-height:1;padding:2px 4px;cursor:pointer}
+@media(min-width:760px){.ios-install{left:auto;right:18px;max-width:340px}}
 /* code block for SQL */
 .code-block{font-family:var(--font-mono);color:#cfcf9e}
 
@@ -751,6 +771,12 @@ textarea.field{resize:vertical;line-height:1.5}
 </style>
 </head>
 <body data-theme="dark">
+<!-- Instant-paint launch splash: shown before JS boots so iOS standalone never
+     flashes a blank white screen; removed by boot() after first render. -->
+<div id="splash" aria-hidden="true">
+  <svg viewBox="0 0 30 34" fill="none"><path d="M15 1L28 8.5V25.5L15 33L2 25.5V8.5L15 1Z" stroke="#C8A84B" stroke-width="1.5"/><path d="M15 7L22.5 11.5V20.5L15 25L7.5 20.5V11.5L15 7Z" stroke="#C8A84B" stroke-width="1" opacity="0.5"/></svg>
+  <div class="splash-nm">OCTA<b>GON</b></div>
+</div>
 <canvas id="bgfx"></canvas>
 <div id="app">
   <div id="sb-overlay" onclick="toggleSidebar(false)"></div>
@@ -760,7 +786,7 @@ textarea.field{resize:vertical;line-height:1.5}
       <span class="name">OCTA<b>GON</b></span>
     </div>
     <nav class="nav" id="navList"></nav>
-    <div class="nav-foot">v2.0 · DREAMSMAKER</div>
+    <div class="nav-foot">v2.0</div>
   </aside>
   <div id="main">
     <header id="topbar">
@@ -6749,9 +6775,11 @@ function initPWA(){
     const link=document.createElement('link');link.rel='manifest';link.href=URL.createObjectURL(blob);
     document.head.appendChild(link);
   }catch(e){}
-  // install prompt
+  // install prompt (Android/desktop Chrome fire beforeinstallprompt)
   window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();_deferredPrompt=e;showInstallChip();});
-  window.addEventListener('appinstalled',()=>{_deferredPrompt=null;const c=$('#installChip');if(c)c.remove();toast('OCTAGON installed','green');});
+  window.addEventListener('appinstalled',()=>{_deferredPrompt=null;const c=$('#installChip');if(c)c.remove();const b=$('#iosInstall');if(b)b.remove();toast('OCTAGON installed','green');});
+  // iOS Safari never fires beforeinstallprompt — show a custom Add-to-Home-Screen hint.
+  try{maybeShowIOSInstall();}catch(_){}
   // service worker for offline app shell + RELIABLE auto-update (http/https only).
   // (The old build registered the worker from a blob: URL, which Chrome rejects and
   //  which can never self-update — leaving users stuck on a stale cached app. We now
@@ -6792,6 +6820,25 @@ function showInstallChip(){
   c.onclick=async()=>{if(!_deferredPrompt)return;_deferredPrompt.prompt();await _deferredPrompt.userChoice;_deferredPrompt=null;c.remove();};
   document.body.appendChild(c);
 }
+function _isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent||'')&&!window.MSStream;}
+function _isStandalone(){
+  return window.navigator.standalone===true||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches);
+}
+function maybeShowIOSInstall(){
+  if(!_isIOS()||_isStandalone())return;                       // only un-installed iOS Safari
+  if(localStorage.getItem('octagon_ios_install')==='dismissed')return;
+  if($('#iosInstall'))return;
+  // wait a beat so it doesn't fight the onboarding modal on the very first paint
+  setTimeout(()=>{
+    if(_isStandalone()||$('#iosInstall'))return;
+    const b=document.createElement('div');b.id='iosInstall';b.className='ios-install';
+    b.innerHTML=`<div class="ii-icon"><svg viewBox="0 0 30 34" fill="none"><path d="M15 1L28 8.5V25.5L15 33L2 25.5V8.5L15 1Z" stroke="#C8A84B" stroke-width="1.5"/><path d="M15 7L22.5 11.5V20.5L15 25L7.5 20.5V11.5L15 7Z" stroke="#C8A84B" stroke-width="1" opacity="0.5"/></svg></div>
+      <div class="ii-txt"><b>Add OCTAGON to your Home Screen</b> — tap <svg class="ii-share" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M8 8l4-4 4 4M5 12v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7"/></svg> then <b>Add to Home Screen</b> for full-screen, offline access.</div>
+      <button class="ii-x" aria-label="Dismiss" onclick="dismissIOSInstall()">&times;</button>`;
+    document.body.appendChild(b);
+  },1600);
+}
+function dismissIOSInstall(){try{localStorage.setItem('octagon_ios_install','dismissed');}catch(_){}const b=$('#iosInstall');if(b)b.remove();}
 
 /* ---------- ambient particle background ---------- */
 function initBackgroundFX(){
@@ -6891,8 +6938,13 @@ function boot(){
         +'<h2 style="color:#C8A84B">OCTAGON</h2><p>Loaded. Tap a section in the menu to begin.</p></div>';
     }
   }
+  _safe(hideSplash,'hideSplash');
   _safe(resolveAuth,'resolveAuth');
   _safe(()=>{if(S.reminders&&S.reminders.enabled)scheduleReminderCheck();},'reminders');
+}
+function hideSplash(){
+  const s=document.getElementById('splash');if(!s)return;
+  s.classList.add('hide');setTimeout(()=>{try{s.remove();}catch(_){}} ,400);
 }
 // Global guard: surface unexpected errors instead of dying silently.
 window.addEventListener('error',function(ev){try{console.warn('[octagon] runtime error:',ev.message);}catch(_){}});
