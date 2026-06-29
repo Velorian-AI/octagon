@@ -41,10 +41,10 @@ body[data-theme="red"]{--gold:#E63946;--accent:#E63946}
 ::-webkit-scrollbar-track{background:var(--void)}
 ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:#3a3a3a}
-h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:.02em;font-weight:900;line-height:.95;text-transform:uppercase}
+h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:.02em;font-weight:700;line-height:.95;text-transform:uppercase}
 /* Barlow Condensed is variable-weight (Bebas was single heavy weight) — force all
    display-font UI elements to the heavy poster weight so headings read aggressive. */
-.brand .name,.tb-avatar,.fcard-av,.fcard-name,.fcard-lvl-n,.rec-n,.fw-count,.ready-score,.acwr-num,.section-title,.ag-logo .nm,.avatar-init,.avatar,.logo-mark,.stat-box .v{font-weight:900}
+.brand .name,.tb-avatar,.fcard-av,.fcard-name,.fcard-lvl-n,.rec-n,.fw-count,.ready-score,.acwr-num,.section-title,.ag-logo .nm,.avatar-init,.avatar,.logo-mark,.stat-box .v{font-weight:700}
 .mono{font-family:var(--font-mono)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:var(--font-body);font-size:15px}
@@ -250,8 +250,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   cursor:pointer;border:2px solid var(--void)}
 
 .stat-box{background:var(--card);border:1px solid var(--line);padding:16px;border-radius:2px}
-.stat-box .k{font-family:var(--font-display);font-weight:900;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.stat-box .v{font-family:var(--font-display);font-size:36px;font-weight:900;line-height:.9;color:var(--text);text-transform:uppercase}
+.stat-box .k{font-family:var(--font-display);font-weight:700;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-box .v{font-family:var(--font-display);font-size:36px;font-weight:700;line-height:.9;color:var(--text);text-transform:uppercase}
 .stat-box .v.gold{color:var(--gold)}
 .stat-box .v small{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--muted);text-transform:none}
 .stat-box .sub{font-size:12px;color:var(--muted);margin-top:6px}
@@ -265,19 +265,19 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 /* ---- Weight-cut progress arc (the signature dashboard hero) ---- */
 .wcut-card{padding:16px 18px 18px;display:flex;flex-direction:column;align-items:center}
 .wcut-head{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:320px}
-.wcut-klabel{font-family:var(--font-display);font-weight:900;letter-spacing:.13em;text-transform:uppercase;font-size:14px;color:var(--muted)}
-.wcut-days{font-family:var(--font-display);font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:14px;color:var(--text)}
+.wcut-klabel{font-family:var(--font-display);font-weight:700;letter-spacing:.13em;text-transform:uppercase;font-size:14px;color:var(--muted)}
+.wcut-days{font-family:var(--font-display);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:14px;color:var(--text)}
 .wcut-days.urgent{color:var(--red);animation:cdpulse 2s ease-in-out infinite}
 .wcut-wrap{position:relative;width:100%;max-width:300px;margin:2px auto 0}
 .wcut-wrap svg{width:100%;height:auto;display:block;overflow:visible}
 .wcut-center{position:absolute;left:0;right:0;bottom:8%;text-align:center;pointer-events:none}
-.wcut-big{font-family:var(--font-display);font-weight:900;font-size:48px;line-height:.8;color:var(--text)}
+.wcut-big{font-family:var(--font-display);font-weight:700;font-size:48px;line-height:.8;color:var(--text)}
 .wcut-big small{font-family:var(--font-body);font-weight:600;font-size:15px;color:var(--muted);margin-left:3px;text-transform:lowercase}
-.wcut-status{font-family:var(--font-display);font-weight:900;letter-spacing:.04em;font-size:18px;margin-top:4px}
+.wcut-status{font-family:var(--font-display);font-weight:700;letter-spacing:.04em;font-size:18px;margin-top:4px}
 .wcut-foot{display:flex;width:100%;max-width:300px;margin:8px auto 0;border-top:1px solid var(--line);padding-top:10px}
 .wcut-foot>div{flex:1;text-align:center}
-.wcut-foot .l{font-family:var(--font-display);font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:var(--muted)}
-.wcut-foot .vv{font-family:var(--font-display);font-weight:900;font-size:23px;line-height:1;margin-top:2px;color:var(--text)}
+.wcut-foot .l{font-family:var(--font-display);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:var(--muted)}
+.wcut-foot .vv{font-family:var(--font-display);font-weight:700;font-size:23px;line-height:1;margin-top:2px;color:var(--text)}
 .wcut-cta{margin-top:10px;font-size:13px;color:var(--gold);font-weight:600;display:flex;align-items:center;gap:6px;justify-content:center}
 .wcut-cta svg{width:15px;height:15px}
 /* ---- Film Room ---- */
@@ -619,7 +619,7 @@ table.dt tr:hover td{background:rgba(255,255,255,.015)}
   #botnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;background:var(--card);
     border-top:1px solid var(--line);z-index:45;padding-bottom:env(safe-area-inset-bottom)}
   #botnav .bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-    color:var(--muted);font-family:var(--font-display);font-size:11px;font-weight:900;letter-spacing:.08em;
+    color:var(--muted);font-family:var(--font-display);font-size:11px;font-weight:700;letter-spacing:.08em;
     text-transform:uppercase;transition:color .15s}
   #botnav .bn svg{width:20px;height:20px}
   #botnav .bn.active{color:var(--gold)}
