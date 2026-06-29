@@ -13,14 +13,14 @@
 <title>OCTAGON — Fighter's Companion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --void:#0A0A0A; --card:#141414; --elev:#1E1E1E;
   --gold:#C8A84B; --red:#E63946; --green:#3FB950;
   --text:#F5F5F5; --muted:#888888; --line:#262626;
   --accent:var(--gold);
-  --font-display:'Bebas Neue',sans-serif;
+  --font-display:'Barlow Condensed','Bebas Neue',sans-serif;
   --font-body:'Inter',-apple-system,sans-serif;
   --font-mono:'JetBrains Mono',monospace;
   --sbw:230px;
@@ -41,7 +41,10 @@ body[data-theme="red"]{--gold:#E63946;--accent:#E63946}
 ::-webkit-scrollbar-track{background:var(--void)}
 ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:#3a3a3a}
-h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:.04em;font-weight:400;line-height:1}
+h1,h2,h3,.display{font-family:var(--font-display);letter-spacing:.02em;font-weight:900;line-height:.95;text-transform:uppercase}
+/* Barlow Condensed is variable-weight (Bebas was single heavy weight) — force all
+   display-font UI elements to the heavy poster weight so headings read aggressive. */
+.brand .name,.tb-avatar,.fcard-av,.fcard-name,.fcard-lvl-n,.rec-n,.fw-count,.ready-score,.acwr-num,.section-title,.ag-logo .nm,.avatar-init,.avatar,.logo-mark,.stat-box .v{font-weight:900}
 .mono{font-family:var(--font-mono)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 input,select,textarea{font-family:var(--font-body);font-size:15px}
@@ -247,10 +250,10 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   cursor:pointer;border:2px solid var(--void)}
 
 .stat-box{background:var(--card);border:1px solid var(--line);padding:16px;border-radius:2px}
-.stat-box .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.stat-box .v{font-family:var(--font-mono);font-size:30px;font-weight:700;line-height:1;color:var(--text)}
+.stat-box .k{font-family:var(--font-display);font-weight:900;font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.stat-box .v{font-family:var(--font-display);font-size:36px;font-weight:900;line-height:.9;color:var(--text);text-transform:uppercase}
 .stat-box .v.gold{color:var(--gold)}
-.stat-box .v small{font-size:14px;color:var(--muted)}
+.stat-box .v small{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--muted);text-transform:none}
 .stat-box .sub{font-size:12px;color:var(--muted);margin-top:6px}
 .stat-box.editable{position:relative;cursor:pointer}
 .stat-box.editable:hover{border-color:var(--gold)}
@@ -259,6 +262,24 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .stat-box.editable:hover .edit-hint{opacity:.8}
 .stat-box .v.set-cta{font-size:20px;color:var(--gold);opacity:.85;letter-spacing:.02em}
 .stat-box.editable:hover .v.set-cta{opacity:1;text-shadow:0 0 14px var(--glow)}
+/* ---- Weight-cut progress arc (the signature dashboard hero) ---- */
+.wcut-card{padding:16px 18px 18px;display:flex;flex-direction:column;align-items:center}
+.wcut-head{display:flex;justify-content:space-between;align-items:center;width:100%;max-width:320px}
+.wcut-klabel{font-family:var(--font-display);font-weight:900;letter-spacing:.13em;text-transform:uppercase;font-size:14px;color:var(--muted)}
+.wcut-days{font-family:var(--font-display);font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:14px;color:var(--text)}
+.wcut-days.urgent{color:var(--red);animation:cdpulse 2s ease-in-out infinite}
+.wcut-wrap{position:relative;width:100%;max-width:300px;margin:2px auto 0}
+.wcut-wrap svg{width:100%;height:auto;display:block;overflow:visible}
+.wcut-center{position:absolute;left:0;right:0;bottom:8%;text-align:center;pointer-events:none}
+.wcut-big{font-family:var(--font-display);font-weight:900;font-size:48px;line-height:.8;color:var(--text)}
+.wcut-big small{font-family:var(--font-body);font-weight:600;font-size:15px;color:var(--muted);margin-left:3px;text-transform:lowercase}
+.wcut-status{font-family:var(--font-display);font-weight:900;letter-spacing:.04em;font-size:18px;margin-top:4px}
+.wcut-foot{display:flex;width:100%;max-width:300px;margin:8px auto 0;border-top:1px solid var(--line);padding-top:10px}
+.wcut-foot>div{flex:1;text-align:center}
+.wcut-foot .l{font-family:var(--font-display);font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:10px;color:var(--muted)}
+.wcut-foot .vv{font-family:var(--font-display);font-weight:900;font-size:23px;line-height:1;margin-top:2px;color:var(--text)}
+.wcut-cta{margin-top:10px;font-size:13px;color:var(--gold);font-weight:600;display:flex;align-items:center;gap:6px;justify-content:center}
+.wcut-cta svg{width:15px;height:15px}
 /* ---- Film Room ---- */
 .plat-badge{flex:none;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pc);border:1px solid var(--pc);border-radius:999px;padding:2px 7px;white-space:nowrap}
 .reel-card{display:flex;flex-direction:column}
@@ -473,11 +494,11 @@ a.nolink{text-decoration:none;text-align:center}
 .pill.cyan{color:var(--cyan);border-color:rgba(63,200,200,.4);background:rgba(63,200,200,.1)}
 .pill.sm{padding:2px 8px;font-size:10px}
 /* coloured stat-box accents */
-.stat-box.acc{border-top-width:2px}
-.stat-box.acc-gold{border-top-color:var(--gold);box-shadow:inset 0 1px 0 rgba(200,168,75,.25)}
-.stat-box.acc-red{border-top-color:var(--red);box-shadow:inset 0 1px 0 rgba(230,57,70,.25)}
-.stat-box.acc-green{border-top-color:var(--green);box-shadow:inset 0 1px 0 rgba(63,185,80,.25)}
-.stat-box.acc-blue{border-top-color:var(--blue);box-shadow:inset 0 1px 0 rgba(91,141,239,.25)}
+.stat-box.acc{border-left-width:3px}
+.stat-box.acc-gold{border-left-color:var(--gold);box-shadow:inset 1px 0 0 rgba(200,168,75,.3)}
+.stat-box.acc-red{border-left-color:var(--red);box-shadow:inset 1px 0 0 rgba(230,57,70,.3)}
+.stat-box.acc-green{border-left-color:var(--green);box-shadow:inset 1px 0 0 rgba(63,185,80,.3)}
+.stat-box.acc-blue{border-left-color:var(--blue);box-shadow:inset 1px 0 0 rgba(91,141,239,.3)}
 
 /* ===== launch sign-in gate ===== */
 #authGate{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:24px;
@@ -598,7 +619,8 @@ table.dt tr:hover td{background:rgba(255,255,255,.015)}
   #botnav{display:flex;position:fixed;bottom:0;left:0;right:0;height:62px;background:var(--card);
     border-top:1px solid var(--line);z-index:45;padding-bottom:env(safe-area-inset-bottom)}
   #botnav .bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-    color:var(--muted);font-size:9px;font-weight:600}
+    color:var(--muted);font-family:var(--font-display);font-size:11px;font-weight:900;letter-spacing:.08em;
+    text-transform:uppercase;transition:color .15s}
   #botnav .bn svg{width:20px;height:20px}
   #botnav .bn.active{color:var(--gold)}
 }
@@ -1216,6 +1238,8 @@ ROUTES.dashboard=function(){
   ${activeInj.length?`<div class="banner"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
     <div><b>${activeInj.length} active injur${activeInj.length>1?'ies':'y'}</b> — ${activeInj.map(i=>esc(i.bodyPart)).join(', ')}. Train around them.</div></div>`:''}
 
+  ${weightCutArc()}
+
   <div class="grid g4 keep mb">
     <div class="stat-box acc acc-gold editable" onclick="dashEditDays()" title="Tap to set your fight date"><span class="edit-hint">${icon('edit')}</span><div class="k">Days to Fight</div>${du===null?`<div class="v set-cta">+ Set</div>`:`<div class="v gold">${du<0?'past':du}</div>`}<div class="sub">${p.nextEvent?fmtDate(p.nextEvent):'Tap to add'}</div></div>
     <div class="stat-box acc acc-blue editable" onclick="dashEditWeight()" title="Tap to log your weight"><span class="edit-hint">${icon('edit')}</span><div class="k">Current Weight</div>${lastWeight?`<div class="v">${toDisplayW(lastWeight)}<small>${wUnit()}</small></div>`:`<div class="v set-cta">+ Set</div>`}<div class="sub">${lastWeight?(p.weightClass||'').toUpperCase():'Tap to add'}</div></div>
@@ -1281,6 +1305,56 @@ ROUTES.dashboard=function(){
   </div>`;
 };
 function typeColor(t){return{striking:'red',grappling:'gold',sparring:'red','S&C':'green',wrestling:'gold'}[t]||'';}
+/* Semicircular weight-cut gauge — the signature home-screen hero. */
+const _WCUT_L=345.5752; // π·r, r=110, length of the 180° arc path
+function _wcutGeo(f){
+  f=Math.max(0,Math.min(1,f));
+  const a=(180-180*f)*Math.PI/180;
+  return{dash:`${(_WCUT_L*f).toFixed(1)} ${_WCUT_L.toFixed(1)}`,ex:(140+110*Math.cos(a)).toFixed(1),ey:(140-110*Math.sin(a)).toFixed(1)};
+}
+function _wcutSVG(g,color){
+  return`<svg viewBox="0 0 280 160" role="img" aria-label="Weight cut progress">
+    <defs>
+      <linearGradient id="wcg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${color}" stop-opacity=".45"/><stop offset="1" stop-color="${color}"/></linearGradient>
+      <filter id="wcglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <path d="M30 140 A110 110 0 0 1 250 140" fill="none" stroke="#222" stroke-width="16" stroke-linecap="round"/>
+    <path d="M30 140 A110 110 0 0 1 250 140" fill="none" stroke="url(#wcg)" stroke-width="16" stroke-linecap="round" stroke-dasharray="${g.dash}" filter="url(#wcglow)"/>
+    <circle cx="${g.ex}" cy="${g.ey}" r="7" fill="${color}" filter="url(#wcglow)"/><circle cx="${g.ex}" cy="${g.ey}" r="3" fill="#0A0A0A"/>
+  </svg>`;
+}
+function weightCutArc(){
+  const p=S.profile, tw=S.targetWeight;
+  const lastWeight=S.weightLog.length?S.weightLog[S.weightLog.length-1].weight:p.weight;
+  const du=daysUntil(p.nextEvent);
+  if(!lastWeight||!tw){
+    const action=!lastWeight?'dashEditWeight()':'dashEditTarget()';
+    const label=!lastWeight?'Log your current weight':'Set your fight weight';
+    return`<div class="card wcut-card mb" onclick="${action}" style="cursor:pointer">
+      <div class="wcut-head"><span class="wcut-klabel">Weight Cut</span><span class="wcut-days" style="color:var(--muted)">Not set</span></div>
+      <div class="wcut-wrap">${_wcutSVG(_wcutGeo(0),'#2c2c2c')}
+        <div class="wcut-center"><div class="wcut-big" style="color:var(--muted)">—<small>${wUnit()}</small></div><div class="wcut-status" style="color:var(--muted)">Set up your cut</div></div></div>
+      <div class="wcut-cta">${icon('plus')} ${label}</div></div>`;
+  }
+  const startW=Math.max(lastWeight,tw,...S.weightLog.map(w=>w.weight||0));
+  const total=startW-tw, lost=startW-lastWeight, toCut=lastWeight-tw;
+  const onWeight=toCut<=0.05;
+  const frac=onWeight?1:(total>0?lost/total:0);
+  const fillColor=onWeight?'var(--green)':'var(--gold)';
+  const D=v=>{const n=Math.round((+toDisplayW(v))*10)/10;return Number.isInteger(n)?String(n):n.toFixed(1);};
+  const statusLabel=onWeight?'On weight':`${D(toCut)} ${wUnit()} to cut`;
+  const daysTxt=du===null?'No fight set':(du<0?'Past':`${du} day${du===1?'':'s'} out`);
+  const urgent=du!==null&&du>=0&&du<=10;
+  return`<div class="card wcut-card mb">
+    <div class="wcut-head"><span class="wcut-klabel">Weight Cut</span><span class="wcut-days ${urgent?'urgent':''}">${daysTxt}</span></div>
+    <div class="wcut-wrap">${_wcutSVG(_wcutGeo(frac),fillColor)}
+      <div class="wcut-center"><div class="wcut-big">${D(lastWeight)}<small>${wUnit()}</small></div><div class="wcut-status" style="color:${fillColor}">${statusLabel}</div></div></div>
+    <div class="wcut-foot">
+      <div><div class="l">Current</div><div class="vv">${D(lastWeight)}</div></div>
+      <div><div class="l">Progress</div><div class="vv" style="color:${fillColor}">${Math.round(frac*100)}%</div></div>
+      <div><div class="l">Target</div><div class="vv">${D(tw)}</div></div>
+    </div></div>`;
+}
 function weekHours(){const wk=Date.now()-7*864e5;return S.sessions.filter(s=>new Date(s.date)>=wk).reduce((a,s)=>a+s.duration/60,0);}
 function weekSessionCount(){const wk=Date.now()-7*864e5;return S.sessions.filter(s=>new Date(s.date)>=wk).length;}
 function todaysPlan(){
@@ -4982,7 +5056,7 @@ const TECH_LIBRARY=[
     {n:'Berimbolo',lvl:'Advanced',tech:'guard',cues:['Invert off De La Riva and crawl to the back.','Control the belt-line and hips throughout.','Land on the back, get the second hook, then attack.']},
     {n:'Leg-Lock Entries (Ashi Garami)',lvl:'Advanced',cues:['Establish the ashi/saddle position before attacking.','Control the hip line to stop them from spinning out.','Stay tight, finish slow — leg locks are dangerous to drill.']}
   ]},
-  {art:'MMA',color:'#c8a84b',items:[
+  {art:'MMA',color:'#C8A84B',items:[
     {n:'Striking-to-Takedown Entries',lvl:'Advanced',tech:'shot',cues:['Freeze the hands with a 1-2, then drop on the double.','Hide the level change behind real strikes.','Drive through on contact, don\'t stall on the legs.']},
     {n:'Cage Wrestling',lvl:'Advanced',cues:['Pin them to the fence and chain takedown attempts.','Underhooks and head position win the fence battle.','Wrestle up immediately off the cage on defense.']},
     {n:'Ground & Pound',lvl:'Intermediate',cues:['Posture in dominant position before striking.','Use strikes to open up submissions and vice-versa.','Stay heavy; don\'t give up position to swing.']},
@@ -6940,7 +7014,18 @@ function boot(){
   }
   _safe(hideSplash,'hideSplash');
   _safe(resolveAuth,'resolveAuth');
+  _safe(initHaptics,'initHaptics');
   _safe(()=>{if(S.reminders&&S.reminders.enabled)scheduleReminderCheck();},'reminders');
+}
+// Light haptic pulse on primary actions (PWA on Android; iOS ignores vibrate but degrades cleanly).
+let _hapticsBound=false;
+function initHaptics(){
+  if(_hapticsBound||!('vibrate'in navigator))return;_hapticsBound=true;
+  document.addEventListener('click',e=>{
+    const b=e.target&&e.target.closest&&e.target.closest('.btn,.bn,.nav-item,.banner-cta');
+    if(!b||b.disabled||b.classList.contains('ghost'))return;
+    try{navigator.vibrate(10);}catch(_){}
+  },true);
 }
 function hideSplash(){
   const s=document.getElementById('splash');if(!s)return;
